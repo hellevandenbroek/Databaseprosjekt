@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import db_connection.Apparat;
@@ -37,7 +38,7 @@ public class addWorkoutController {
 	@FXML Label timerLabel, minuttLabel;
 	@FXML Slider timerSlider, minuttSlider;
 	
-	@FXML Button addExercise, addSelected, addSelectedAndClose;
+	@FXML Button addExercise, addSelected;
 	@FXML ListView<Exercise> listViewExercises, addedExercises;
 	
 	// notat
@@ -60,31 +61,31 @@ public class addWorkoutController {
 		ResultSet rs = null;
 
 		// with apparater
-		String query = "SELECT * FROM øvelse NATURAL JOIN apparat NATURAL JOIN apparatøvelse";
 		List<Exercise> exercises = new ArrayList<>();
+        String query = "SELECT * FROM apparatøvelse NATURAL JOIN apparat NATURAL JOIN øvelse";
 		try {
 			rs = stmt.executeQuery(query);
 			
 			while (rs.next()) {
-				String name = rs.getString("øvelse.navn");
-				int id = rs.getInt("øvelse.id");
-				Apparat ap = new Apparat(rs.getString("apparat.navn"), rs.getInt("apparat.id"));
+				
+				String name = rs.getString("navn");
+				int id = rs.getInt("øvelse_id");
+				Apparat ap = new Apparat(rs.getString("navn"), rs.getInt("apparat_id"));
 				Exercise e = new Exercise(name, id, ap);
-				System.out.println(e);
 				exercises.add(e);
 			}
-			query = "SELECT * FROM øvelse";
-			rs = stmt.executeQuery(query);
-			
-			
-			while (rs.next()) {
-				String name = rs.getString("navn");
-				int id = rs.getInt("id");
-				Exercise e = new Exercise(name, id);
-				if (!exercises.contains(e)) {
-					exercises.add(e);
-				}
-			}
+//			query = "SELECT * FROM øvelse";
+//			rs = stmt.executeQuery(query);
+//			
+//			
+//			while (rs.next()) {
+//				String name = rs.getString("navn");
+//				int id = rs.getInt("id");
+//				Exercise e = new Exercise(name, id);
+//				if (!exercises.contains(e)) {
+//					exercises.add(e);
+//				}
+//			}
 			exercises.add(new Exercise("Satans", 555));
 
 		} catch (SQLException e) {
@@ -155,6 +156,28 @@ public class addWorkoutController {
 		}
 	}
 	
+	public void addSelected() {
+		// TODO send to database
+		clearFields();
+	}
+	
+	public void addSelectedAndClose() {
+		// TODO send to database
+		clearFields();
+		// TODO close window
+	}
+	
+	public void clearFields() {
+		notat.clear();
+		date.setValue(null);
+		addedExercises.getItems().clear();
+		kilo.setValue(null);
+		sett.setValue(null);
+		form.setValue(null);
+		prestasjon.setValue(null);
+		hour.clear();
+		minute.clear();
+	}
 	
 	
 	
