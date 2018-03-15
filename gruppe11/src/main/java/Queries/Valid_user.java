@@ -44,7 +44,6 @@ public class Valid_user extends QueryImporter{
 		conn = DriverManager.getConnection("jdbc:mysql://"
 				+ this.serverName + ":" + this.portNumber + "/" + this.dbName,
 				connectionProps);
-
 		return conn;
 	}
 
