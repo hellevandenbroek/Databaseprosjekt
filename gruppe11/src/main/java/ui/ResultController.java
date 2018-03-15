@@ -56,7 +56,7 @@ public class ResultController{
 		ex.setItems(exercises);
 	}
 
-	public String getDate(DatePicker date) throws SQLException {
+	public String getDate(DatePicker date) {
 		return date.getValue().toString();
 	}
 
