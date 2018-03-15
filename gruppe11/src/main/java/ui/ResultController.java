@@ -56,37 +56,47 @@ public class ResultController{
 		ex.setItems(exercises);
 	}
 
-	public String getDate(DatePicker date) throws SQLException {
+	public String getDate(DatePicker date) {
 		return date.getValue().toString();
 	}
 
-	public void getData() throws SQLException {
+	public void getData(){
 		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE bruker_id = (?) and dato_tidspunkt > (?) < (?) and navn = (?)";
-		Connection c = cs.getConnection();
-		PreparedStatement pstm = c.prepareStatement(query);
-		String fDate = getDate(fromDate);
-		String tDate = getDate(toDate);
-		String exercise = ex.getSelectionModel().getSelectedItem();
-		Integer id = getInfo.getUserID();
-		pstm.setInt(1, id);
-		pstm.setString(2, fDate);
-		pstm.setString(3, tDate);
-		pstm.setString(4, exercise);
-		ResultSet rs = pstm.executeQuery();
-		String str = "";
-		while (rs.next()) {
-
-			str += "Id: " + rs.getInt("id") + "\n";
-			str += "Navn: " + rs.getString("navn") + "\n";
-			str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
-			str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
-			str += "Varighet: " + rs.getTime("varighet") + "\n";
-			str += "Form: " + rs.getInt("form") + "\n";
-			str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
-			str += "Notat: " + rs.getString("notat") + "\n";
-			str += "-----------------------------------\n";
+		Connection c;
+		try {
+			c = cs.getConnection();
+			PreparedStatement pstm = c.prepareStatement(query);
+			String fDate = getDate(fromDate);
+			String tDate = getDate(toDate);
+			String exercise = ex.getSelectionModel().getSelectedItem();
+			Integer id = getInfo.getUserID();
+			pstm.setInt(1, id);
+			pstm.setString(2, fDate);
+			pstm.setString(3, tDate);
+			pstm.setString(4, exercise);
+			ResultSet rs = pstm.executeQuery();
+			String str = "";
+			while (rs.next()) {
+				
+				str += "Id: " + rs.getInt("id") + "\n";
+				str += "Navn: " + rs.getString("navn") + "\n";
+				str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
+				str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
+				str += "Varighet: " + rs.getTime("varighet") + "\n";
+				str += "Form: " + rs.getInt("form") + "\n";
+				str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
+				str += "Notat: " + rs.getString("notat") + "\n";
+				str += "-----------------------------------\n";
+			}
+			data.setText(str);
+		} catch (SQLException e) {
+			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
+			e.printStackTrace();
+		} catch (NullPointerException n) {
+			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
+			n.printStackTrace();
 		}
-		data.setText(str);
+		
 	}
 
 	public void toBack() {

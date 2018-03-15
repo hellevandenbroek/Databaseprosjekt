@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import ui.Alerter;
+
 public class getInfo {
 	
 	private Statement stmt = null;
@@ -44,7 +46,11 @@ public class getInfo {
 			//Exception shieet
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			Alerter.error("Feil brukernavn", "Vennligst sjekk at brukernavnet er rett!");
 			e.printStackTrace();
+		} catch (NullPointerException n) {
+			Alerter.error("Feil brukernavn", "Vennligst sjekk at brukernavnet er rett!");
+			n.printStackTrace();
 		}
 		
 		// Check if user exists
