@@ -20,11 +20,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/Lib/mysql-connector-java-5.1.46-bin.jar</name>
-			<type>1</type>
-			<location>C:/Users/Simon/Desktop/mysql-connector-java-5.1.46-bin.jar</location>
-		</link>
-	</linkedResources>
 </projectDescription>
