@@ -10,8 +10,8 @@ public class getInfo {
 	private Statement stmt = null;
 	
 	//Keep the users login details
-	private String userName = null;
-	private Integer userID = null;
+	private static String userName = null;
+	private static Integer userID = null;
 	
 	//Set up new connection
 	private ConnectService cs = new ConnectService(); 
@@ -68,7 +68,7 @@ public class getInfo {
 	}
 		
 	// Gets the current user
-	public Integer getUserID() {
+	public static Integer getUserID() {
 		if (userID != null) {
 			return userID;
 		}
