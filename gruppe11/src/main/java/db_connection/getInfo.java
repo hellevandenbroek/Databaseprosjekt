@@ -56,24 +56,36 @@ public class getInfo {
 		}
 		
 	}
-	
-	public String getUser(String user) throws SQLException {
+	 ///Returns the UserID if it is valid, if not returns Null
+	public Integer getUser(String user) throws SQLException {
 		if(getValidUser(user)== true) {
-			System.out.println("This is user: "+ user);
-			return userID.toString();
+			return userID;
 		}
 		else {
-			return "User is not in the database";
+			return null;
+		}
+	}
+		
+	// Gets the current user
+	public Integer getUserID() {
+		if (userID != null) {
+			return userID;
+		}
+		else {
+			return null;
 		}
 	}
 	
-	public static void main(String [ ] args) throws SQLException {
-		getInfo inf = new getInfo();
-		
-		String userr = inf.getUser("88");
-		System.out.println(userr);
+	
+	// Gets the current name of User
+	public String getUserName() {
+		if (userName!= null) {
+			return userName;
+		}
+		else {
+			return null;
+		}
 	}
-
 	
 	
 }
