@@ -28,7 +28,7 @@ public class ExerciseGroupController {
 	@FXML Button two;
 	@FXML TextField name;
 	@FXML ListView<String> groups;
-	@FXML ListView<Integer> exercises;
+	@FXML ListView<String> exercises;
 	@FXML ListView<String> allExercises;
 	
 	private ConnectService cs = new ConnectService();
@@ -42,12 +42,17 @@ public class ExerciseGroupController {
 		while (rs.next()) {
 			groups.getItems().add(rs.getString("navn"));
 		}
-		 groups.setOnMouseClicked(new ListViewHandler(){
-		        @Override
-		        public void handle(javafx.scene.input.MouseEvent event) {
-		            rowSelected(groups.getSelectionModel().getSelectedIndex());
-		        }
-		 });
+		groups.setOnMouseClicked(new ListViewHandler(){
+			@Override
+		    public void handle(javafx.scene.input.MouseEvent event) {
+		    try {
+				rowSelected((groups.getSelectionModel().getSelectedIndex()) + 1);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}}
+		);
+		 
 		String query2 = "SELECT navn FROM øvelse";
 		Connection c2 = cs.getConnection();
 		stm = c2.createStatement();
@@ -57,14 +62,25 @@ public class ExerciseGroupController {
 			}
 	}
 	
-	public void rowSelected(int k) {
+	
+	//This does not work
+	public void rowSelected(int k) throws SQLException {
 		for (int i = 0; i < exercises.getItems().size(); i++) {
 			exercises.getItems().remove(i);
 		}
-		exercises.getItems().add(k);
+		String query2 = "SELECT DISTINCT øvelse.navn FROM øvelse JOIN medlem_av_gruppe Where øvelse.id = øvelse_id";
+		Connection c2 = cs.getConnection();
+		stm = c2.createStatement();
+		PreparedStatement pstm = c2.prepareStatement(query2);
+		pstm.setInt(1, k);
+		System.out.println(pstm);
+		
+		ResultSet rs2 = pstm.executeQuery(query2);
+		while (rs2.next()) {
+			exercises.getItems().add(rs2.getString("navn"));
+		}
 	}
 	
-	 
 
 	public void toBack() {
 		try {
