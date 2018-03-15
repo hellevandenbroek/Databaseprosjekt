@@ -56,27 +56,19 @@ public class getInfo {
 		}
 		
 	}
-	
-	private String checkUser(String user) throws SQLException {
+	 ///Returns the UserID if it is valid, if not returns Null
+	public Integer checkUser(String user) throws SQLException {
+
 		if(getValidUser(user)== true) {
-			System.out.println("This is user: "+ user);
-			return userID.toString();
+			return userID;
 		}
 		else {
-			return "User is not in the database";
+			return null;
 		}
 	}
-	
-	public String getUser() {
-		if (userName != null) {
-			return userName;
-		}
-		else {
-			return "No user currently logged in";
-		}
-	}
-	
-	public Integer getId() {
+		
+	// Gets the current user
+	public Integer getUserID() {
 		if (userID != null) {
 			return userID;
 		}
@@ -84,8 +76,17 @@ public class getInfo {
 			return null;
 		}
 	}
-
-
+	
+	
+	// Gets the current name of User
+	public String getUserName() {
+		if (userName!= null) {
+			return userName;
+		}
+		else {
+			return null;
+		}
+	}
 	
 	
 }
