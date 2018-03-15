@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="576.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="203.0" layoutY="263.0" minWidth="185.0" mnemonicParsing="false" text="Siste treningsøkter" />
+      <Label layoutX="164.0" layoutY="78.0" text="Treningsappen">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <Button layoutX="203.0" layoutY="316.0" minWidth="185.0" mnemonicParsing="false" text="Logger" />
+      <Button layoutX="203.0" layoutY="370.0" minWidth="185.0" mnemonicParsing="false" text="Øvelser" />
+      <Button layoutX="203.0" layoutY="432.0" minWidth="185.0" mnemonicParsing="false" text="Button" />
+      <Button layoutX="203.0" layoutY="210.0" minWidth="185.0" mnemonicParsing="false" text="Antall treningsøkter" />
+   </children>
+</AnchorPane>
