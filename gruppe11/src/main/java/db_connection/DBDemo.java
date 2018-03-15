@@ -140,6 +140,17 @@ public class DBDemo {
 			e.printStackTrace();
 			return;
 		}
+		
+		// inserting into table
+		try {
+		    String insert = "INSERT INTO bruker VALUES (NULL, \"Kenny Jonnyson\")";
+			this.executeUpdate(conn, insert);
+			System.out.println("Inserting into table");
+	    } catch (SQLException e) {
+			System.out.println("ERROR: Could not drop the table");
+			e.printStackTrace();
+			return;
+		}
 	}
 	
 	/**
