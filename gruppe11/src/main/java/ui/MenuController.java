@@ -18,11 +18,13 @@ public class MenuController {
 	
 	public void toExercise() {
 		try {
+			Stage stag = (Stage) exercise.getScene().getWindow();
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ExerciseGroups.fxml"));
 	        Parent root1 = (Parent) fxmlLoader.load();
 	        Stage stage = new Stage();
 	        stage.setScene(new Scene(root1));  
 	        stage.show();
+	        stag.close();
 		}
 	        
 	    catch(Exception e) {
@@ -32,11 +34,13 @@ public class MenuController {
 	
 	public void toResult() {
 		try {
+			Stage stag = (Stage) logs.getScene().getWindow();
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Result.fxml"));
 	        Parent root1 = (Parent) fxmlLoader.load();
 	        Stage stage = new Stage();
 	        stage.setScene(new Scene(root1));  
-	        stage.show();          
+	        stage.show();     
+	        stag.close();
 	    }
 	        
 	    catch(Exception e) {
@@ -46,11 +50,14 @@ public class MenuController {
 	
 	public void toAdd() {
 		try {
+
+			Stage stag = (Stage) add.getScene().getWindow();
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("addWorkout.fxml"));
 	        Parent root1 = (Parent) fxmlLoader.load();
 	        Stage stage = new Stage();
 	        stage.setScene(new Scene(root1));  
-	        stage.show();          
+	        stage.show();       
+	        stag.close();
 	    }
 	        
 	    catch(Exception e) {

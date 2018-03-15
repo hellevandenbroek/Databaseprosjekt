@@ -18,6 +18,7 @@ public class ConnectService {
 		Properties connectionProps = new Properties();
 		connectionProps.put("user", this.userName);
 		connectionProps.put("password", this.password);
+		connectionProps.put("useSSL", "false");
 
 		conn = DriverManager.getConnection(
 				"jdbc:mysql://" + this.serverName + ":" + this.portNumber + "/" + this.dbName, connectionProps);
