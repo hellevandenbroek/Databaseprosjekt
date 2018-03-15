@@ -6,19 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import java.io.InputStream;
-import java.sql.SQLWarning;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Observable;
-
-import com.mysql.jdbc.ExceptionInterceptor;
-import com.mysql.jdbc.PingTarget;
-import com.mysql.jdbc.ResultSetInternalMethods;
 
 import db_connection.Apparat;
-import db_connection.ApparatExercise;
 import db_connection.ConnectService;
 import db_connection.Exercise;
 import javafx.collections.FXCollections;
@@ -67,17 +58,35 @@ public class addWorkoutController {
 		stmt = c.createStatement();
 		
 		ResultSet rs = null;
-		
-		String query = "SELECT * FROM øvelse";
+
+		// with apparater
+		String query = "SELECT * FROM øvelse NATURAL JOIN apparat NATURAL JOIN apparatøvelse";
 		List<Exercise> exercises = new ArrayList<>();
 		try {
 			rs = stmt.executeQuery(query);
 			
 			while (rs.next()) {
-				Exercise e = new Exercise(rs.getString("navn"), rs.getInt("id")); 
+				String name = rs.getString("øvelse.navn");
+				int id = rs.getInt("øvelse.id");
+				Apparat ap = new Apparat(rs.getString("apparat.navn"), rs.getInt("apparat.id"));
+				Exercise e = new Exercise(name, id, ap);
+				System.out.println(e);
 				exercises.add(e);
-			
 			}
+			query = "SELECT * FROM øvelse";
+			rs = stmt.executeQuery(query);
+			
+			
+			while (rs.next()) {
+				String name = rs.getString("navn");
+				int id = rs.getInt("id");
+				Exercise e = new Exercise(name, id);
+				if (!exercises.contains(e)) {
+					exercises.add(e);
+				}
+			}
+			exercises.add(new Exercise("Satans", 555));
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -97,10 +106,14 @@ public class addWorkoutController {
 //		ApparatExercise e6 = new ApparatExercise("bull", 55, new Apparat("shit", 55));
 		listViewExercises.getItems().addAll(exercises);	
 		listViewExercises.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)-> {
-			if (newValue instanceof ApparatExercise) {
+			System.out.println(newValue);
+			
+			if (newValue.getApparat() != null) {
 				showApparatView();
+				System.out.println(newValue.getApparat());
 			} else {
 				hideApparatView();
+				System.out.println("Exercise does not have an apparat.");
 			}
 			
 		});
@@ -135,7 +148,7 @@ public class addWorkoutController {
 	public void addExercise() {
 		Exercise e = listViewExercises.getSelectionModel().getSelectedItem();
 		addedExercises.getItems().add(e);
-		if (e instanceof ApparatExercise) {
+		if (e.getApparat() != null) {
 			System.out.println("This is apparatly an apparat.");
 		} else {
 			System.out.println("This is not.");
