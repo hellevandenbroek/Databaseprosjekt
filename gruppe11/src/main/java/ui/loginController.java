@@ -25,7 +25,7 @@ public class loginController {
 			String input = loginInput.getText();
 			
 			//Check if the input is a real user
-			if (info.getUser(input)!= null) {
+			if (info.checkUser(input)!= null) {
 				try {
 					
 					//Switch to the menu if login is succsesful

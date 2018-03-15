@@ -57,7 +57,7 @@ public class getInfo {
 		
 	}
 	 ///Returns the UserID if it is valid, if not returns Null
-	private String checkUser(String user) throws SQLException {
+	public Integer checkUser(String user) throws SQLException {
 
 		if(getValidUser(user)== true) {
 			return userID;
