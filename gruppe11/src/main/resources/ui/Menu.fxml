@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.*?>
 
-<AnchorPane prefHeight="567.0" prefWidth="585.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MenuController">
+<AnchorPane prefHeight="600.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MenuController">
    <children>
-      <Button fx:id="add" layoutX="203.0" layoutY="263.0" minWidth="185.0" mnemonicParsing="false" text="Legg til treningsøkt" onAction="#toAdd"/>
-      <Button fx:id="logs" layoutX="203.0" layoutY="316.0" minWidth="185.0" mnemonicParsing="false" text="Resultatlogg" onAction="#toResult"/>
-      <Button fx:id="exercise" layoutX="203.0" layoutY="370.0" minWidth="185.0" mnemonicParsing="false" text="Øvelser" onAction="#toExercise"/>
-      <Button fx:id="number" layoutX="203.0" layoutY="210.0" minWidth="185.0" mnemonicParsing="false" text="Antall treningsøkter" />
-      <Label layoutX="242.0" layoutY="124.0" prefHeight="21.0" prefWidth="107.0" text="Treningsappen" />
+      <Button fx:id="add" layoutX="263.0" layoutY="277.0" minWidth="185.0" mnemonicParsing="false" onAction="#toAdd" text="Legg til treningsøkt" />
+      <Button fx:id="logs" layoutX="263.0" layoutY="330.0" minWidth="185.0" mnemonicParsing="false" onAction="#toResult" text="Resultatlogg" />
+      <Button fx:id="exercise" layoutX="263.0" layoutY="384.0" minWidth="185.0" mnemonicParsing="false" onAction="#toExercise" text="Øvelser" />
+      <Button fx:id="number" layoutX="263.0" layoutY="224.0" minWidth="185.0" mnemonicParsing="false" text="Antall treningsøkter" />
+      <Label layoutX="302.0" layoutY="138.0" prefHeight="21.0" prefWidth="107.0" text="Treningsappen" />
    </children>
 </AnchorPane>
