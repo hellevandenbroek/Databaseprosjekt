@@ -11,5 +11,6 @@
       <Button fx:id="exercise" layoutX="263.0" layoutY="384.0" minWidth="185.0" mnemonicParsing="false" onAction="#toExercise" text="Øvelser" />
       <Button fx:id="number" layoutX="263.0" layoutY="224.0" minWidth="185.0" mnemonicParsing="false" text="Antall treningsøkter" />
       <Label layoutX="302.0" layoutY="138.0" prefHeight="21.0" prefWidth="107.0" text="Treningsappen" />
+      <Button fx:id="exitBtn" layoutX="29.0" layoutY="22.0" mnemonicParsing="false" onAction="#exit" text="Lukk" />
    </children>
 </AnchorPane>
