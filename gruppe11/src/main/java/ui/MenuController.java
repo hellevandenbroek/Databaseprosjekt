@@ -50,6 +50,7 @@ public class MenuController {
 	
 	public void toAdd() {
 		try {
+
 			Stage stag = (Stage) add.getScene().getWindow();
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("addWorkout.fxml"));
 	        Parent root1 = (Parent) fxmlLoader.load();
