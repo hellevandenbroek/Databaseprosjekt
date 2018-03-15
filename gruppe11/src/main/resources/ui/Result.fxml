@@ -16,7 +16,7 @@
       <Label layoutX="193.0" layoutY="46.0" text="Fra" />
       <Label layoutX="195.0" layoutY="86.0" text="Til" />
       <TextArea fx:id="data" layoutX="6.0" layoutY="200.0" prefHeight="200.0" prefWidth="603.0" />
-      <Button layoutX="25.0" layoutY="18.0" mnemonicParsing="false" onAction="#toBack" text="Tilbake" />
+      <Button fx:id="back" layoutX="25.0" layoutY="18.0" mnemonicParsing="false" onAction="#toBack" text="Tilbake" />
       <ChoiceBox fx:id="ex" layoutX="227.0" layoutY="122.0" prefHeight="27.0" prefWidth="194.0" />
    </children>
 </AnchorPane>

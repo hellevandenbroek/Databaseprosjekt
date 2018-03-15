@@ -84,11 +84,13 @@ public class ExerciseGroupController {
 
 	public void toBack() {
 		try {
+			Stage stag = (Stage) back.getScene().getWindow();
 	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
 	        Parent root1 = (Parent) fxmlLoader.load();
 	        Stage stage = new Stage();
 	        stage.setScene(new Scene(root1));  
 	        stage.show();          
+	        stag.close();
 	    }
 	    catch(Exception e) {
 	       e.printStackTrace();

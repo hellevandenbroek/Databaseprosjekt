@@ -29,11 +29,13 @@ public class loginController {
 				try {
 					
 					//Switch to the menu if login is succsesful
+					Stage stag = (Stage) LoginButton.getScene().getWindow();
 			        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
 			        Parent root1 = (Parent) fxmlLoader.load();
 			        Stage stage = new Stage();
 			        stage.setScene(new Scene(root1));  
-			        stage.show();          
+			        stage.show();        
+			        stag.close();
 			    }
 			        
 			    catch(Exception e) {
