@@ -57,7 +57,7 @@ public class getInfo {
 		
 	}
 	
-	public String getUser(String user) throws SQLException {
+	private String checkUser(String user) throws SQLException {
 		if(getValidUser(user)== true) {
 			System.out.println("This is user: "+ user);
 			return userID.toString();
@@ -67,12 +67,24 @@ public class getInfo {
 		}
 	}
 	
-	public static void main(String [ ] args) throws SQLException {
-		getInfo inf = new getInfo();
-		
-		String userr = inf.getUser("88");
-		System.out.println(userr);
+	public String getUser() {
+		if (userName != null) {
+			return userName;
+		}
+		else {
+			return "No user currently logged in";
+		}
 	}
+	
+	public Integer getId() {
+		if (userID != null) {
+			return userID;
+		}
+		else {
+			return null;
+		}
+	}
+
 
 	
 	
