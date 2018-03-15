@@ -2,8 +2,8 @@ package db_connection;
 
 public class Exercise {
 
-	private static String name;
-	private static int id;
+	private String name;
+	private int id;
 	
 	public Exercise(String name, int id) {
 		this.name = name;
@@ -22,6 +22,8 @@ public class Exercise {
 	public String toString() {
 		return name;
 	}
+	
+
 	
 	
 }

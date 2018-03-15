@@ -1,13 +1,28 @@
 package ui;
 
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
+import java.io.InputStream;
+import java.sql.SQLWarning;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
+
+import com.mysql.jdbc.ExceptionInterceptor;
+import com.mysql.jdbc.PingTarget;
+import com.mysql.jdbc.ResultSetInternalMethods;
 
 import db_connection.Apparat;
 import db_connection.ApparatExercise;
+import db_connection.ConnectService;
 import db_connection.Exercise;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -42,32 +57,69 @@ public class addWorkoutController {
 	@FXML ChoiceBox<Integer> kilo, sett;
 	@FXML Pane apparatPane;
 	
-	public void initialize() {
+	private ConnectService cs = new ConnectService(); 
+	private Statement stmt = null;
+	
+	public void initialize() throws SQLException {
+		
+		Connection c = cs.getConnection();
+		
+		stmt = c.createStatement();
+		
+		ResultSet rs = null;
+		
+		String query = "SELECT * FROM øvelse";
+		List<Exercise> exercises = new ArrayList<>();
+		try {
+			rs = stmt.executeQuery(query);
+			
+			while (rs.next()) {
+				Exercise e = new Exercise(rs.getString("navn"), rs.getInt("id")); 
+				exercises.add(e);
+			
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+
 		
 		// TODO GET INFORMATION FROM DB
-		Exercise e1 = new Exercise("pushups", 0);
-		Exercise e2 = new Exercise("situps", 1);
-		Exercise e3 = new Exercise("planke", 2);
-		Exercise e4 = new Exercise("run", 3);
-		Exercise e5 = new Exercise("sofa", 4);
-		ApparatExercise e6 = new ApparatExercise("bull", 55, new Apparat("shit", 55));
 		
-		List<Exercise> exercises = Arrays.asList(e1, e2, e3, e4, e5);
+		
+		
+//		Exercise e1 = new Exercise("pushups", 0);
+//		Exercise e2 = new Exercise("situps", 1);
+//		Exercise e3 = new Exercise("planke", 2);
+//		Exercise e4 = new Exercise("run", 3);
+//		Exercise e5 = new Exercise("sofa", 4);
+//		ApparatExercise e6 = new ApparatExercise("bull", 55, new Apparat("shit", 55));
 		listViewExercises.getItems().addAll(exercises);	
-		listViewExercises.getItems().add(e6);
-		listViewExercises.selectionModelProperty().addListener(e -> {
-			System.out.println("Hello");
-			if (listViewExercises.getSelectionModel().getSelectedItem() 
-					instanceof ApparatExercise) {
-				System.out.println("Below");
+		listViewExercises.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)-> {
+			if (newValue instanceof ApparatExercise) {
 				showApparatView();
-				
 			} else {
 				hideApparatView();
-				
 			}
+			
 		});
 		
+		// adding values to choiceboxes
+		ObservableList<Integer> oneTen = 
+				FXCollections.observableArrayList(
+						1, 2, 3, 4, 5, 6, 7, 8, 9, 10); 
+		ObservableList<Integer> five150 =  FXCollections.observableArrayList(5);
+		for (int i = 10; i < 150; i+= 5) {
+			five150.add(i);
+			
+		}
+		
+		kilo.setItems(five150);
+		form.setItems(oneTen);
+		prestasjon.setItems(oneTen);
+		sett.setItems(oneTen);
+
 	}
 	
 	private void hideApparatView() {

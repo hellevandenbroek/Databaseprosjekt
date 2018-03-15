@@ -12,4 +12,7 @@ public class ApparatExercise extends Exercise {
 		return ap;
 	}
 	
+	public ApparatExercise getObject() {
+		return this;
+	}
 }
