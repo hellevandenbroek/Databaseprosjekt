@@ -47,7 +47,6 @@ public class ConnectService {
 		try {
 			conn = this.getConnection();
 			System.out.println("Connected to database");
-			System.out.println(this.executeUpdate(conn, "SELECT * FROM brukere"));
 		} catch (SQLException e) {
 			System.out.println("ERROR: Could not connect to the database");
 			e.printStackTrace();
