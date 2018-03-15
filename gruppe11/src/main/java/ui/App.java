@@ -1,4 +1,4 @@
-package no.sanderbreivik.gruppe11;
+package ui;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
