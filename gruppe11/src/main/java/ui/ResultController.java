@@ -61,7 +61,7 @@ public class ResultController{
 	}
 
 	public void getData(){
-		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE bruker_id = (?) and dato_tidspunkt > (?) < (?) and navn = (?)";
+		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
 		Connection c;
 		try {
 			c = cs.getConnection();
@@ -69,15 +69,12 @@ public class ResultController{
 			String fDate = getDate(fromDate);
 			String tDate = getDate(toDate);
 			String exercise = ex.getSelectionModel().getSelectedItem();
-			Integer id = getInfo.getUserID();
-			pstm.setInt(1, id);
-			pstm.setString(2, fDate);
-			pstm.setString(3, tDate);
-			pstm.setString(4, exercise);
+			pstm.setString(1, fDate);
+			pstm.setString(2, tDate);
+			pstm.setString(3, exercise);
 			ResultSet rs = pstm.executeQuery();
 			String str = "";
 			while (rs.next()) {
-				
 				str += "Id: " + rs.getInt("id") + "\n";
 				str += "Navn: " + rs.getString("navn") + "\n";
 				str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
