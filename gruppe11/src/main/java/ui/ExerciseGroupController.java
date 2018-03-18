@@ -8,14 +8,12 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 
 import db_connection.ConnectService;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -68,7 +66,7 @@ public class ExerciseGroupController {
 		for (int i = 0; i < exercises.getItems().size(); i++) {
 			exercises.getItems().remove(i);
 		}
-		String query2 = "SELECT DISTINCT øvelse.navn FROM øvelse JOIN medlem_av_gruppe Where øvelse.id = øvelse_id";
+		String query2 = "SELECT DISTINCT øvelse.navn FROM øvelse JOIN medlem_av_gruppe WHERE øvelse.id = øvelse_id";
 		Connection c2 = cs.getConnection();
 		stm = c2.createStatement();
 		PreparedStatement pstm = c2.prepareStatement(query2);
