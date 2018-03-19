@@ -59,7 +59,7 @@ public class ResultController {
 	public String getDate(DatePicker date) {
 		return date.getValue().toString();
 	}
-
+	
 	public void getData() {
 		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
 		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt > (?) < (?);";
@@ -80,7 +80,7 @@ public class ResultController {
 			ResultSet rs2 = pstm2.executeQuery();
 			String str = "";
 			while (rs.next()) {
-				str += "Id: " + rs.getInt("id") + "\n";
+				str += "Id: " + rs.getInt("øvelse_id") + "\n";
 				str += "Navn: " + rs.getString("navn") + "\n";
 				str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
 				str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
