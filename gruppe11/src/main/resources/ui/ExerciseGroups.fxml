@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.ExerciseGroupController">
+<AnchorPane prefHeight="600.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.ExerciseGroupController">
    <children>
       <Button fx:id="back" layoutX="14.0" layoutY="14.0" minWidth="66.0" mnemonicParsing="false" onAction="#toBack" prefHeight="26.0" prefWidth="96.0" text="Tilbake" />
       <Label layoutX="14.0" layoutY="60.0" prefHeight="18.0" prefWidth="319.0" text="Trykk på en øvelsesgruppe for å få opp tilhørende øvelser" />
@@ -29,8 +29,9 @@
             <ListView fx:id="allExercises" prefHeight="200.0" prefWidth="296.0" />
          </content>
       </ScrollPane>
-      <Label layoutX="121.0" layoutY="307.0" prefHeight="18.0" prefWidth="105.0" text="Øvelser i gruppa:" />
+      <Label layoutX="20.0" layoutY="308.0" prefHeight="18.0" prefWidth="105.0" text="Øvelser i gruppa:" />
       <Label layoutX="490.0" layoutY="308.0" prefHeight="18.0" prefWidth="136.0" text="Legg til/ fjern øvelser:" />
       <TextField fx:id="name" focusTraversable="false" layoutX="361.0" layoutY="149.0" prefHeight="26.0" prefWidth="189.0" promptText="Navn på ny øvelsesgruppe" />
+      <Button fx:id="show" layoutX="139.0" layoutY="295.0" mnemonicParsing="false" text="Vis øvelser" onAction="#toShow" />
    </children>
 </AnchorPane>
