@@ -1,5 +1,6 @@
 package ui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +15,7 @@ public class MenuController {
 	@FXML Button logs;
 	@FXML Button add;
 	@FXML Button number;
+	@FXML private Button exitBtn;
 	
 	
 	public void toExercise() {
@@ -63,6 +65,11 @@ public class MenuController {
 	    catch(Exception e) {
 	       e.printStackTrace();
 	    }
+	}
+	public void exit() {
+		Stage stag = (Stage) add.getScene().getWindow();
+		stag.close();
+		Platform.exit();
 	}
 }
 

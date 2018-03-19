@@ -20,7 +20,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-public class ResultController{
+public class ResultController {
 
 	private Statement stm;
 	private PreparedStatement pstm;
@@ -37,15 +37,15 @@ public class ResultController{
 
 	@FXML
 	private Button submit;
-	
+
 	@FXML
 	private Button back;
-	
+
 	@FXML
 	private ChoiceBox<String> ex;
-	
+
 	public void initialize() throws SQLException {
-		ObservableList<String> exercises = FXCollections.observableArrayList(); 
+		ObservableList<String> exercises = FXCollections.observableArrayList();
 		String query = "SELECT navn FROM `øvelse`";
 		Connection c = cs.getConnection();
 		stm = c.createStatement();
@@ -60,24 +60,26 @@ public class ResultController{
 		return date.getValue().toString();
 	}
 
-	public void getData(){
-		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE bruker_id = (?) and dato_tidspunkt > (?) < (?) and navn = (?)";
+	public void getData() {
+		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
+		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt > (?) < (?);";
 		Connection c;
 		try {
 			c = cs.getConnection();
 			PreparedStatement pstm = c.prepareStatement(query);
+			PreparedStatement pstm2 = c.prepareStatement(query2);
 			String fDate = getDate(fromDate);
 			String tDate = getDate(toDate);
 			String exercise = ex.getSelectionModel().getSelectedItem();
-			Integer id = getInfo.getUserID();
-			pstm.setInt(1, id);
-			pstm.setString(2, fDate);
-			pstm.setString(3, tDate);
-			pstm.setString(4, exercise);
+			pstm.setString(1, fDate);
+			pstm.setString(2, tDate);
+			pstm.setString(3, exercise);
+			pstm2.setString(1, fDate);
+			pstm2.setString(2, tDate);
 			ResultSet rs = pstm.executeQuery();
+			ResultSet rs2 = pstm2.executeQuery();
 			String str = "";
 			while (rs.next()) {
-				
 				str += "Id: " + rs.getInt("id") + "\n";
 				str += "Navn: " + rs.getString("navn") + "\n";
 				str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
@@ -86,9 +88,14 @@ public class ResultController{
 				str += "Form: " + rs.getInt("form") + "\n";
 				str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
 				str += "Notat: " + rs.getString("notat") + "\n";
-				str += "-----------------------------------\n";
+
+				while (rs2.next()) {
+					str += "Antall økter i perioden: " + rs2.getInt("Antall") + "\n";
+					str += "-----------------------------------\n";
+				}
 			}
 			data.setText(str);
+
 		} catch (SQLException e) {
 			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
 			e.printStackTrace();
@@ -96,7 +103,7 @@ public class ResultController{
 			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
 			n.printStackTrace();
 		}
-		
+
 	}
 
 	public void toBack() {
