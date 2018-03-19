@@ -118,9 +118,9 @@ public class ExerciseGroupController {
 			String query = "INSERT INTO medlem_av_gruppe (øvelse_id, øvelsesgruppe_id) VALUES (?, ?)";
 			Connection c = cs.getConnection();
 			PreparedStatement pstm = c.prepareStatement(query);
-			pstm.setInt(1, selectedEx);
-			pstm.setInt(2, selectedGroup);
-			pstm.executeUpdate();
+			//pstm.setInt(1, selectedEx);
+			//pstm.setInt(2, selectedGroup);
+			//pstm.executeUpdate();
 		}
 	}
 	
