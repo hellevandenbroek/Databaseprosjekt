@@ -71,6 +71,23 @@ public class MenuController {
 		stag.close();
 		Platform.exit();
 	}
+	
+	public void toOverview() {
+		try {
+
+			Stage stag = (Stage) add.getScene().getWindow();
+	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Okter.fxml"));
+	        Parent root1 = (Parent) fxmlLoader.load();
+	        Stage stage = new Stage();
+	        stage.setScene(new Scene(root1));  
+	        stage.show();       
+	        stag.close();
+	    }
+	        
+	    catch(Exception e) {
+	       e.printStackTrace();
+	    }
+	}
 }
 
 	
