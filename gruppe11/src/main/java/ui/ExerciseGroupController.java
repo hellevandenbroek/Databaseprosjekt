@@ -96,32 +96,28 @@ public class ExerciseGroupController {
 
 	public void removeGroup() {
 		try {
-			
 			String groupName = groups.getSelectionModel().getSelectedItem();
-			
-			String query = "DELETE FROM øvelsesgruppe WHERE navn = ?";
-			Connection c = cs.getConnection();
-			PreparedStatement pstm = c.prepareStatement(query);
-			pstm.setString(1, groupName);
-			groups.getItems().clear();
-			pstm.executeUpdate();
-		} catch (SQLException e1) {
+			if (groupName != null) {
+				String query = "DELETE FROM øvelsesgruppe WHERE navn = ?";
+				Connection c = cs.getConnection();
+				PreparedStatement pstm = c.prepareStatement(query);
+				pstm.setString(1, groupName);
+				groups.getItems().clear();
+				pstm.executeUpdate();
+				String query1 = "SELECT navn FROM øvelsesgruppe";
+				stm = cs.getConnection().createStatement();
+				ResultSet rs1 = stm.executeQuery(query1);
+				while (rs1.next()) {
+					groups.getItems().add(rs1.getString("navn"));
+				}
+				name.clear();
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e1) {
 			e1.printStackTrace();
 			Alerter.error("Feil ved sletting av gruppe", "Sjekk at du har markert gruppe.");
 		}
-		// oppdaterer øvelsesgrupper
-		try {
-			String query1 = "SELECT navn FROM øvelsesgruppe";
-			stm = cs.getConnection().createStatement();
-			ResultSet rs1 = stm.executeQuery(query1);
-			while (rs1.next()) {
-				groups.getItems().add(rs1.getString("navn"));
-			}
-			name.clear();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	// sletter markert

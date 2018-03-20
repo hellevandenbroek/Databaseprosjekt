@@ -19,7 +19,7 @@
          <children>
             <VBox alignment="CENTER" prefHeight="261.0" prefWidth="260.0">
                <children>
-                  <Label prefHeight="18.0" prefWidth="131.0" text="Alle øvelsesgrupper: " />
+                  <Label text="Alle øvelsesgrupper: " />
                   <ListView fx:id="groups" onMouseClicked="#toShow" prefHeight="162.0" prefWidth="250.0" />
                   <Button mnemonicParsing="false" onAction="#toShow" text="Vis øvelser">
                      <VBox.margin>
@@ -52,7 +52,7 @@
          <children>
             <VBox alignment="CENTER">
                <children>
-                  <Label prefHeight="18.0" prefWidth="107.0" text="Øvelser i gruppe:" />
+                  <Label text="Øvelser i gruppe:" />
                   <ListView fx:id="exercises" prefHeight="200.0" prefWidth="250.0" />
                </children>
             </VBox>
@@ -75,7 +75,7 @@
             </VBox>
             <VBox alignment="CENTER">
                <children>
-                  <Label prefHeight="18.0" prefWidth="79.0" text="Alle øvelser:" />
+                  <Label text="Alle øvelser:" />
                   <ListView fx:id="allExercises" prefHeight="200.0" prefWidth="250.0" />
                </children>
             </VBox>
