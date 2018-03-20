@@ -22,8 +22,8 @@
          </content>
       </ScrollPane>
       <Button fx:id="add" layoutX="397.0" layoutY="185.0" mnemonicParsing="false" onAction="#toAdd" prefHeight="26.0" prefWidth="117.0" text="Ny øvelsesgruppe" />
-      <Button fx:id="one" layoutX="340.0" layoutY="384.0" mnemonicParsing="false" text="-&gt;" />
-      <Button fx:id="two" layoutX="340.0" layoutY="420.0" mnemonicParsing="false" text="&lt;-" />
+      <Button fx:id="one" layoutX="340.0" layoutY="384.0" mnemonicParsing="false" text="-&gt;" onAction="#toOne" />
+      <Button fx:id="two" layoutX="340.0" layoutY="420.0" mnemonicParsing="false" text="&lt;-" onAction="#toTwo" />
       <ScrollPane layoutX="383.0" layoutY="333.0" prefHeight="200.0" prefWidth="311.0">
          <content>
             <ListView fx:id="allExercises" prefHeight="200.0" prefWidth="296.0" />

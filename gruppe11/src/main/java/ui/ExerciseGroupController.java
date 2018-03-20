@@ -30,7 +30,7 @@ public class ExerciseGroupController {
 	@FXML Button show;
 	@FXML TextField name;
 	@FXML ListView<String> groups;
-	@FXML ListView<String> exercises;
+	@FXML ListView<String> exercises = null;
 	@FXML ListView<String> allExercises;
 	
 	private ConnectService cs = new ConnectService();
@@ -51,6 +51,7 @@ public class ExerciseGroupController {
 		while (rs2.next()) {
 			allExercises.getItems().add(rs2.getString("navn"));
 			}
+		
 	}
 	
 	
@@ -97,31 +98,52 @@ public class ExerciseGroupController {
 	
 	//sletter markert
 	public void toOne() throws SQLException {
+		Connection c = cs.getConnection();
 		String selectedGroup = groupSelected();
 		String selectedEx = exSelectedOne();
-		String query = "DELETE medlem_av_gruppe.øvelse_ID FROM medlem_av_gruppe NATURAL JOIN øvelsesgruppe JOIN øvelse WHERE øvelsesgruppe.navn = ? AND øvelse.navn = ?";
-		Connection c = cs.getConnection();
+		String getID = "SELECT DISTINCT øvelsesgruppe.øvelsesgruppe_id, øvelse.øvelse_ID FROM øvelsesgruppe NATURAL JOIN medlem_av_gruppe JOIN øvelse WHERE øvelsesgruppe.navn = ? AND øvelse.navn = ?";
+		PreparedStatement pstm1 = c.prepareStatement(getID);
+		pstm1.setString(1, selectedGroup);
+		pstm1.setString(2, selectedEx);
+		ResultSet rs = pstm1.executeQuery();
+		Integer groupId = null, exId = null;
+		while (rs.next()) {
+			groupId = rs.getInt(1);
+			exId = rs.getInt(2);
+		}
+		String query = "DELETE FROM medlem_av_gruppe WHERE øvelsesgruppe_id = ? AND øvelse_id = ?";
 		PreparedStatement pstm = c.prepareStatement(query);
-		pstm.setString(1, selectedGroup);
-		pstm.setString(2, selectedEx);
+		pstm.setInt(1, groupId);
+		pstm.setInt(2, exId);
 		pstm.executeUpdate();
+		toShow();
 	}
+	
 	
 	//legger til markert
 	public void toTwo() throws SQLException {
+		Connection c = cs.getConnection();
 		String selectedGroup = groupSelected();
 		String selectedEx = exSelectedTwo();
-		
-		//må få gjort om disse til ints
-		
+		String getID = "SELECT DISTINCT øvelsesgruppe.øvelsesgruppe_id, øvelse.øvelse_ID FROM øvelsesgruppe JOIN øvelse WHERE øvelsesgruppe.navn = ? AND øvelse.navn = ?";
+		PreparedStatement pstm1 = c.prepareStatement(getID);
+		pstm1.setString(1, selectedGroup);
+		pstm1.setString(2, selectedEx);
+		ResultSet rs = pstm1.executeQuery();
+		Integer groupId = null, exId = null;
+		while (rs.next()) {
+			groupId = rs.getInt(1);
+			exId = rs.getInt(2);
+		}
+					
 		if (!isInGroup(selectedGroup, selectedEx)) {
 			String query = "INSERT INTO medlem_av_gruppe (øvelse_id, øvelsesgruppe_id) VALUES (?, ?)";
-			Connection c = cs.getConnection();
 			PreparedStatement pstm = c.prepareStatement(query);
-			//pstm.setInt(1, selectedEx);
-			//pstm.setInt(2, selectedGroup);
-			//pstm.executeUpdate();
+			pstm.setInt(1, exId);
+			pstm.setInt(2, groupId);
+			pstm.executeUpdate();
 		}
+		toShow();
 	}
 	
 	private boolean isInGroup(String selectedGroup, String selectedEx) {
@@ -131,11 +153,10 @@ public class ExerciseGroupController {
 
 	public void toShow() throws SQLException {
 		exercises.getItems().clear();
-
 		String query = "SELECT øvelse.navn FROM øvelse NATURAL JOIN medlem_av_gruppe JOIN øvelsesgruppe WHERE øvelsesgruppe.navn = (?) AND øvelsesgruppe.øvelsesgruppe_id = medlem_av_gruppe.øvelsesgruppe_id";
 		Connection c = cs.getConnection();
 		PreparedStatement pstm = c.prepareStatement(query);
-		pstm.setString(1, groupSelected());	 //finn	
+		pstm.setString(1, groupSelected());	 	
 		ResultSet rs = pstm.executeQuery();
 		while (rs.next()) {
 			exercises.getItems().add(rs.getString("navn"));
