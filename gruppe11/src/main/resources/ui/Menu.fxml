@@ -40,7 +40,7 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="exercise" minWidth="185.0" mnemonicParsing="false" onAction="#toExercise" text="Øvelser">
+                  <Button fx:id="exercise" minWidth="185.0" mnemonicParsing="false" onAction="#toExercise" text="Øvelsesgrupper">
                      <VBox.margin>
                         <Insets bottom="5.0" />
                      </VBox.margin>

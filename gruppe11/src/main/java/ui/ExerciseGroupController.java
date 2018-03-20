@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -30,8 +31,6 @@ public class ExerciseGroupController {
 	Button one;
 	@FXML
 	Button two;
-	@FXML
-	Button show;
 	@FXML
 	TextField name;
 	@FXML
@@ -86,11 +85,13 @@ public class ExerciseGroupController {
 					groups.getItems().add(rs1.getString("navn"));
 				}
 				name.clear();
+			} else {
+				name.clear();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			Alerter.error("Feil ved innsetting", "Sjekk at du har markert riktig.");
+			Alerter.error("Feil ved innsetting", "Sjekk navnet i feltet.");
 		}
 
 	}
@@ -173,6 +174,9 @@ public class ExerciseGroupController {
 		while (rs.next()) {
 			exercises.getItems().add(rs.getString("navn"));
 		}
+		if (exercises.getItems().isEmpty()) {
+			exercises.setPlaceholder(new Label("Inneholder ingen øvelser."));
+		}
 	}
 
 	public String groupSelected() {
@@ -199,6 +203,7 @@ public class ExerciseGroupController {
 			all.add(rs.getString("navn"));
 		}
 		if (all.contains(name)) {
+			Alerter.error("Gruppe finnes allerede", "Vennligst velg et annet navn!");
 			return false;
 		}
 		return true;
