@@ -37,39 +37,22 @@ public class ExerciseGroupController {
 	private Statement stm;
 
 	public void initialize() throws SQLException {
+		//henter alle øvelsesgrupper
 		String query = "SELECT navn FROM øvelsesgruppe";
-		Connection c = cs.getConnection();
-		stm = c.createStatement();
+		stm = cs.getConnection().createStatement();
 		ResultSet rs = stm.executeQuery(query);
 		while (rs.next()) {
 			groups.getItems().add(rs.getString("navn"));
 		}
+		//henter alle øvelser
 		String query2 = "SELECT navn FROM øvelse";
-		Connection c2 = cs.getConnection();
-		stm = c2.createStatement();
+		stm = cs.getConnection().createStatement();
 		ResultSet rs2 = stm.executeQuery(query2);
 		while (rs2.next()) {
 			allExercises.getItems().add(rs2.getString("navn"));
-			}
-		
+		}
 	}
-	
-	
-	//Håndterer tilbakeknappen
-	public void toBack() {
-		try {
-			Stage stag = (Stage) back.getScene().getWindow();
-	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
-	        Parent root1 = (Parent) fxmlLoader.load();
-	        Stage stage = new Stage();
-	        stage.setScene(new Scene(root1));  
-	        stage.show();          
-	        stag.close();
-	    }
-	    catch(Exception e) {
-	       e.printStackTrace();
-	    }
-	}	
+		
 	
 	//Legger til en ny øvelsesgruppe i databasen
 	public void toAdd() throws SQLException {
@@ -77,17 +60,16 @@ public class ExerciseGroupController {
 		if(groupName.length() > 0 && isfree(groupName)){
 			groups.getItems().clear(); //sletter tidligere innhold
 			String query = "INSERT INTO øvelsesgruppe (navn) VALUES (?)";
-			Connection c = cs.getConnection();
-			PreparedStatement pstm = c.prepareStatement(query);
+			PreparedStatement pstm = cs.getConnection().prepareStatement(query);
 			pstm.setString(1, groupName);
 			pstm.executeUpdate();
-			//oppdaterer
+
+			//oppdaterer øvelsesgrupper
 			String query1 = "SELECT navn FROM øvelsesgruppe";
-			Connection c1 = cs.getConnection();
-			stm = c1.createStatement();
-			ResultSet rs = stm.executeQuery(query1);
-			while (rs.next()) {
-				groups.getItems().add(rs.getString("navn"));
+			stm = cs.getConnection().createStatement();
+			ResultSet rs1 = stm.executeQuery(query1);
+			while (rs1.next()) {
+				groups.getItems().add(rs1.getString("navn"));
 			}
 			name.clear();
 		}
@@ -97,7 +79,7 @@ public class ExerciseGroupController {
 	}
 	
 	//sletter markert
-	public void toOne() throws SQLException {
+	public void removeEx() throws SQLException {
 		Connection c = cs.getConnection();
 		String selectedGroup = groupSelected();
 		String selectedEx = exSelectedOne();
@@ -116,12 +98,12 @@ public class ExerciseGroupController {
 		pstm.setInt(1, groupId);
 		pstm.setInt(2, exId);
 		pstm.executeUpdate();
-		toShow();
+		update();
 	}
 	
 	
 	//legger til markert
-	public void toTwo() throws SQLException {
+	public void addEx() throws SQLException {
 		Connection c = cs.getConnection();
 		String selectedGroup = groupSelected();
 		String selectedEx = exSelectedTwo();
@@ -143,7 +125,7 @@ public class ExerciseGroupController {
 			pstm.setInt(2, groupId);
 			pstm.executeUpdate();
 		}
-		toShow();
+		update();
 	}
 	
 	private boolean isInGroup(String selectedGroup, String selectedEx) {
@@ -152,10 +134,14 @@ public class ExerciseGroupController {
 
 
 	public void toShow() throws SQLException {
+		update();
+	}	
+	
+	//oppdaterer exercises
+	public void update() throws SQLException {
 		exercises.getItems().clear();
 		String query = "SELECT øvelse.navn FROM øvelse NATURAL JOIN medlem_av_gruppe JOIN øvelsesgruppe WHERE øvelsesgruppe.navn = (?) AND øvelsesgruppe.øvelsesgruppe_id = medlem_av_gruppe.øvelsesgruppe_id";
-		Connection c = cs.getConnection();
-		PreparedStatement pstm = c.prepareStatement(query);
+		PreparedStatement pstm = cs.getConnection().prepareStatement(query);
 		pstm.setString(1, groupSelected());	 	
 		ResultSet rs = pstm.executeQuery();
 		while (rs.next()) {
@@ -190,5 +176,21 @@ public class ExerciseGroupController {
 			return false;
 		}
 		return true;
+	}
+	
+	//Håndterer tilbakeknappen
+	public void back() {
+		try {
+			Stage stag = (Stage) back.getScene().getWindow();
+	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+	        Parent root1 = (Parent) fxmlLoader.load();
+	        Stage stage = new Stage();
+	        stage.setScene(new Scene(root1));  
+	        stage.show();          
+	        stag.close();
+	    }
+	    catch(Exception e) {
+	       e.printStackTrace();
+	    }
 	}
 }
