@@ -9,7 +9,6 @@ import java.util.List;
 import java.sql.PreparedStatement;
 
 import db_connection.ConnectService;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -92,6 +90,34 @@ public class ExerciseGroupController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Alerter.error("Feil ved innsetting", "Sjekk navnet i feltet.");
+		}
+
+	}
+
+	public void removeGroup() {
+		try {
+			String groupName = groups.getSelectionModel().getSelectedItem();
+			
+			String query = "DELETE FROM øvelsesgruppe WHERE navn = ?";
+			Connection c = cs.getConnection();
+			PreparedStatement pstm = c.prepareStatement(query);
+			pstm.setString(1, groupName);
+			pstm.executeUpdate();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			Alerter.error("Feil ved sletting av gruppe", "Sjekk at du har markert gruppe.");
+		}
+		// oppdaterer øvelsesgrupper
+		try {
+			String query1 = "SELECT navn FROM øvelsesgruppe";
+			stm = cs.getConnection().createStatement();
+			ResultSet rs1 = stm.executeQuery(query1);
+			while (rs1.next()) {
+				groups.getItems().add(rs1.getString("navn"));
+			}
+			name.clear();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 	}

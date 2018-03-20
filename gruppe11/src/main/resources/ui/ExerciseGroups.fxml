@@ -10,27 +10,32 @@
 
 <VBox prefHeight="600.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.ExerciseGroupController">
    <children>
-      <Button fx:id="back" minWidth="66.0" mnemonicParsing="false" onAction="#back" prefHeight="26.0" prefWidth="96.0" text="Tilbake">
+      <Button fx:id="back" minWidth="66.0" mnemonicParsing="false" onAction="#back" text="Tilbake">
          <VBox.margin>
-            <Insets bottom="50.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="20.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </Button>
-      <HBox alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="261.0" prefWidth="700.0">
          <children>
-            <VBox alignment="CENTER">
+            <VBox alignment="CENTER" prefHeight="261.0" prefWidth="260.0">
                <children>
-                  <TextField fx:id="name" focusTraversable="false" prefHeight="26.0" prefWidth="203.0" promptText="Navn på ny øvelsesgruppe">
-                     <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </TextField>
-                  <Button fx:id="add" mnemonicParsing="false" onAction="#toAdd" prefHeight="26.0" prefWidth="100.0" text="Legg til">
+                  <Label prefHeight="18.0" prefWidth="131.0" text="Alle øvelsesgrupper: " />
+                  <ListView fx:id="groups" onMouseClicked="#toShow" prefHeight="162.0" prefWidth="250.0" />
+                  <Button fx:id="deleteGroup" mnemonicParsing="false" onAction="#removeGroup" text="Slett markert gruppe">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Label prefHeight="18.0" prefWidth="131.0" text="Alle øvelsesgrupper: " />
-                  <ListView fx:id="groups" onMouseClicked="#toShow" prefHeight="200.0" prefWidth="250.0" />
+                  <HBox>
+                     <children>
+                        <TextField fx:id="name" focusTraversable="false" prefHeight="26.0" prefWidth="203.0" promptText="Navn på ny øvelsesgruppe">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Button fx:id="add" mnemonicParsing="false" onAction="#toAdd" prefHeight="27.0" prefWidth="96.0" text="Legg til" />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </children>
@@ -38,7 +43,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="236.0" prefWidth="700.0">
          <children>
             <VBox alignment="CENTER">
                <children>
@@ -46,14 +51,14 @@
                   <ListView fx:id="exercises" prefHeight="200.0" prefWidth="250.0" />
                </children>
             </VBox>
-            <VBox alignment="CENTER">
+            <VBox alignment="CENTER" prefHeight="252.0" prefWidth="150.0">
                <children>
-                  <Button fx:id="one" mnemonicParsing="false" onAction="#removeEx" prefHeight="26.0" prefWidth="140.0" text="Fjern øvelse -&gt;">
+                  <Button fx:id="one" mnemonicParsing="false" onAction="#removeEx" prefHeight="27.0" prefWidth="125.0" text="Fjern øvelse -&gt;">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="two" mnemonicParsing="false" onAction="#addEx" prefHeight="26.0" prefWidth="140.0" text="&lt;- Legg til øvelse">
+                  <Button fx:id="two" mnemonicParsing="false" onAction="#addEx" text="&lt;- Legg til øvelse">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
