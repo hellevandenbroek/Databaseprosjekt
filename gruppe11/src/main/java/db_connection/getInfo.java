@@ -9,7 +9,7 @@ import ui.Alerter;
 
 public class getInfo{
 
-	public static ResultSet getUsers (Integer limit){
+	public static ResultSet getWorkouts (Integer limit){
 	
 		try {
 			Statement stmt = null;

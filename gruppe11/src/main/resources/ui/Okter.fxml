@@ -9,22 +9,27 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.OktController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.OktController">
    <children>
       <VBox layoutX="5.0" layoutY="5.0" prefHeight="600" prefWidth="710">
          <children>
             <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="600.0" prefWidth="710.0" VBox.vgrow="ALWAYS">
                <children>
-                  <TextField fx:id="Input" focusTraversable="false" layoutX="515.0" layoutY="47.0" promptText="Antall" />
+                  <TextField fx:id="input" alignment="CENTER" focusTraversable="false" layoutX="327.0" layoutY="61.0" prefHeight="27.0" prefWidth="63.0" promptText="Antall" />
                   <Label layoutX="280.0" layoutY="229.0" prefHeight="55.0" prefWidth="156.0">
                      <font>
                         <Font size="26.0" />
                      </font>
                   </Label>
-                  <Button fx:id="ReadButton" layoutX="515.0" layoutY="90.0" mnemonicParsing="false" onAction="#runRead" text="Vis Antall" />
-                  <TextArea fx:id="rsText" layoutX="56.0" layoutY="165.0" prefHeight="353.0" prefWidth="599.0" />
-                  <Button fx:id="backButton" layoutX="56.0" layoutY="47.0" mnemonicParsing="false" text="Tilbake" onAction="#runBack"/>
-                  <Text layoutX="241.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Siste Treningsøkter">
+                  <Button fx:id="ReadButton" layoutX="321.0" layoutY="109.0" mnemonicParsing="false" onAction="#runRead" text="Vis Antall" />
+                  <TextArea fx:id="rsText" layoutX="56.0" layoutY="164.0" prefHeight="353.0" prefWidth="599.0" />
+                  <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#toBack" text="Tilbake" />
+                  <Text layoutX="151.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Vis dine siste ">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="395.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="treningsøkter">
                      <font>
                         <Font size="27.0" />
                      </font>

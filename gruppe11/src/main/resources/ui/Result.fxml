@@ -1,22 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="710" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.ResultController">
+<VBox fillWidth="false" prefHeight="600.0" prefWidth="710.0" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.ResultController">
    <children>
-      <DatePicker fx:id="fromDate" layoutX="266.0" layoutY="45.0" />
-      <DatePicker fx:id="toDate" layoutX="266.0" layoutY="85.0" />
-      <Label layoutX="309.0" layoutY="18.0" text="Velg periode" />
-      <Button fx:id="submit" layoutX="324.0" layoutY="163.0" mnemonicParsing="false" onAction="#getData" text="Hent" />
-      <Label layoutX="232.0" layoutY="50.0" text="Fra" />
-      <Label layoutX="234.0" layoutY="90.0" text="Til" />
-      <ChoiceBox fx:id="ex" layoutX="266.0" layoutY="126.0" prefHeight="27.0" prefWidth="194.0" />
-      <TextArea fx:id="data" layoutX="54.0" layoutY="267.0" prefHeight="200.0" prefWidth="603.0" />
-      <Button fx:id="back" layoutX="25.0" layoutY="18.0" mnemonicParsing="false" onAction="#toBack" text="Tilbake" />
+      <Button fx:id="back" mnemonicParsing="false" onAction="#toBack" text="Tilbake">
+         <VBox.margin>
+            <Insets left="10.0" top="10.0" />
+         </VBox.margin>
+      </Button>
+      <HBox>
+         <children>
+            <Region prefHeight="140.0" prefWidth="285.0" HBox.hgrow="ALWAYS" />
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Velg periode for å vise økter" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <DatePicker fx:id="fromDate" promptText="Fra" showWeekNumbers="true" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="5.0" />
+                           </HBox.margin></DatePicker>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <DatePicker fx:id="toDate" promptText="Til" showWeekNumbers="true" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="5.0" />
+                           </HBox.margin></DatePicker>
+                     </children>
+                  </HBox>
+                  <ChoiceBox fx:id="ex" prefHeight="27.0" prefWidth="194.0" VBox.vgrow="ALWAYS">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin></ChoiceBox>
+                  <Button fx:id="submit" mnemonicParsing="false" onAction="#getData" text="Hent">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin></Button>
+               </children>
+            </VBox>
+            <Region prefWidth="285.0" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER">
+         <children>
+            <Region prefWidth="53.0" HBox.hgrow="ALWAYS" />
+            <TextArea fx:id="data" editable="false" prefHeight="395.0" prefWidth="603.0" />
+            <Region prefWidth="53.0" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
    </children>
-</AnchorPane>
+</VBox>

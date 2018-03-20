@@ -1,9 +1,7 @@
 package ui;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import db_connection.getInfo;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,42 +17,44 @@ public class OktController {
 	@FXML
 	Button ReadButton;
 	@FXML 
-	Button BackButton;
+	Button backButton;
 	@FXML
-	TextField Input;
+	TextField input;
 	@FXML
 	TextArea rsText;
 	
-	public void runBack() throws IOException{
-
-		try {
-			Stage stag = (Stage) BackButton.getScene().getWindow();
-	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
-	        Parent root1 = (Parent) fxmlLoader.load();
-	        Stage stage = new Stage();
-	        stage.setScene(new Scene(root1));  
-	        stage.show();          
-	        stag.close();
-	    }
-	    catch(Exception e) {
-	       e.printStackTrace();
-	    }
-	}
-	
 	public void runRead() throws SQLException{
-		getInfo testing = new getInfo();
-		ResultSet rs = getInfo.getUsers(Integer.parseInt(Input.getText()));
-		String str = null;
+		ResultSet rs = getInfo.getWorkouts(Integer.parseInt(input.getText()));
+		String str = "";
 		rsText.clear();
-		Input.clear();
+		input.clear();
 		while (rs.next()) {
+			String notat = rs.getString("notat");
+			if (notat == null) {
+				notat = "Ingen notat";
+			}
 			str += "Dato: " + rs.getString("dato_tidspunkt") + "\n";
 			str += "Varighet: " + rs.getString("varighet") + "\n";
 			str += "Din form: " + rs.getString("form") + "\n";
 			str += "Din prestasjon: " + rs.getString("prestasjon") + "\n";
-			str += "Notat: " + rs.getString("notat") + "\n";
+			str += "Notat: " + notat + "\n";
 			str += "================================\n";
 		}
 		rsText.setText(str);
 	}
+	
+	public void toBack() {
+		try {
+			Stage stag = (Stage) backButton.getScene().getWindow();
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+			Parent root1 = (Parent) fxmlLoader.load();
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root1));
+			stage.show();
+			stag.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }
