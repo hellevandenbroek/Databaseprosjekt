@@ -62,17 +62,29 @@ public class addWorkoutController {
 
 		// with apparater
 		List<Exercise> exercises = new ArrayList<>();
-        String query = "SELECT * FROM apparatøvelse NATURAL JOIN apparat NATURAL JOIN øvelse";
+        String query = "SELECT * FROM apparat JOIN øvelse";
 		try {
 			rs = stmt.executeQuery(query);
 			
 			while (rs.next()) {
-				
+				Exercise e;
 				String name = rs.getString("navn");
-				int id = rs.getInt("øvelse_id");
-				Apparat ap = new Apparat(rs.getString("navn"), rs.getInt("apparat_id"));
-				Exercise e = new Exercise(name, id, ap);
-				exercises.add(e);
+				System.out.println(name);
+				int id = rs.getInt("øvelse.id");
+				if (rs.getString("øvelse_type").equals("apparatøvelse")) {
+					Apparat ap = new Apparat(rs.getString("navn"), rs.getInt("apparat.id"));					
+					e = new Exercise(name, id, ap);
+				} else {
+					e = new Exercise(name, id);
+				}
+				if (e != null) {
+					for (Exercise ex : exercises) {
+						if (ex.getId() != e.getId()) {
+							System.out.println("added " + e.getName());
+							exercises.add(e);
+						}
+					}
+				}
 			}
 //			query = "SELECT * FROM øvelse";
 //			rs = stmt.executeQuery(query);
@@ -86,7 +98,7 @@ public class addWorkoutController {
 //					exercises.add(e);
 //				}
 //			}
-			exercises.add(new Exercise("Satans", 555));
+			exercises.add(new Exercise("Satans", 666));
 
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:controller="ui.addWorkoutController" prefHeight="589.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="589.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.addWorkoutController">
    <children>
       <ScrollPane hbarPolicy="NEVER" layoutX="14.0" layoutY="180.0" prefHeight="342.0" prefWidth="223.0">
          <content>
@@ -33,26 +32,19 @@
                      </font>
                   </Label>
                   <TextField fx:id="minute" prefHeight="26.0" prefWidth="49.0" promptText="30" />
-                  <TextField fx:id="duration" prefHeight="26.0" prefWidth="114.0" promptText="Varighet (min.)" />
-                  <VBox>
-                     <children>
-                        <Label fx:id="timerLabel" text="Timer:" />
-                        <Slider fx:id="timerSlider" blockIncrement="1.0" max="10.0" />
-                        <Label fx:id="minuttLabel" text="Minutter" />
-                        <Slider fx:id="minuttSlider" max="59.0" />
-                     </children>
-                  </VBox>
+                  <TextField fx:id="durationTimer" prefHeight="26.0" prefWidth="114.0" promptText="Varighet (timer.)" />
+                  <TextField fx:id="durationMinutes" prefHeight="26.0" prefWidth="114.0" promptText="Varighet (min.)" />
                </children>
             </HBox>
          </children>
       </VBox>
       <Label layoutX="14.0" layoutY="164.0" text="Øvelser:" />
-      <Button fx:id="addExercise" onAction="#addExercise" layoutX="69.0" layoutY="522.0" mnemonicParsing="false" text="Legg til øvelse" />
+      <Button fx:id="addExercise" layoutX="69.0" layoutY="522.0" mnemonicParsing="false" onAction="#addExercise" text="Legg til øvelse" />
       <TextField fx:id="notat" alignment="TOP_LEFT" layoutX="477.0" layoutY="151.0" prefHeight="131.0" prefWidth="171.0" promptText="Notat.." />
       <Label layoutX="477.0" layoutY="135.0" text="Notat:" />
       <HBox layoutX="477.0" layoutY="500.0" prefHeight="44.0" prefWidth="198.0">
          <children>
-            <Button fx:id="addSelected" onAction="#addSelected" mnemonicParsing="false" text="Legg til" />
+            <Button fx:id="addSelected" mnemonicParsing="false" onAction="#addSelected" text="Legg til" />
          </children>
       </HBox>
       <ScrollPane hbarPolicy="NEVER" layoutX="477.0" layoutY="311.0" prefHeight="170.0" prefWidth="198.0">
@@ -94,5 +86,7 @@
             </HBox>
          </children>
       </VBox>
+      <Label layoutX="237.0" layoutY="6.0" text="Start (kl.)" />
+      <Label layoutX="354.0" layoutY="6.0" text="Varighet av treningsøkt" />
    </children>
 </AnchorPane>
