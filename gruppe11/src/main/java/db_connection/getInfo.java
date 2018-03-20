@@ -7,92 +7,29 @@ import java.sql.Statement;
 
 import ui.Alerter;
 
-public class getInfo {
-	
-	private Statement stmt = null;
-	
-	//Keep the users login details
-	private static String userName = null;
-	private static Integer userID = null;
-	
-	//Set up new connection
-	private ConnectService cs = new ConnectService(); 
-	
-	//Validate the User
-	private Boolean getValidUser (String user) throws SQLException {
-		
-		//Bind the new connection to DB
-		Connection c = cs.getConnection();
-		
-		// Start the statement for SQL query
-		stmt = c.createStatement();
-		
-		//Prepare resultsSet
-		ResultSet rs = null;
-		
-		//Ready the Query
-		String query_String = "SELECT bruker.id, bruker.navn FROM bruker WHERE id = "+ user + ";";
-		
-		try {
-			//Sends the query and saves the result
-			rs = stmt.executeQuery(query_String);
-			
-			/// Saves the ID and Name of user
-			while(rs.next()) {
-				userID = rs.getInt("id");
-				userName = rs.getString("navn");
-			}
-			
-			//Exception shieet
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			Alerter.error("Feil brukernavn", "Vennligst sjekk at brukernavnet er rett!");
-			e.printStackTrace();
-		} catch (NullPointerException n) {
-			Alerter.error("Feil brukernavn", "Vennligst sjekk at brukernavnet er rett!");
-			n.printStackTrace();
-		}
-		
-		// Check if user exists
-		if(userID==Integer.parseInt(user)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-		
-	}
-	 ///Returns the UserID if it is valid, if not returns Null
-	public Integer checkUser(String user) throws SQLException {
+public class getInfo{
 
-		if(getValidUser(user)== true) {
-			return userID;
+	public static ResultSet getWorkouts (Integer limit){
+	
+		try {
+			Statement stmt = null;
+			ResultSet rs = null;
+			ConnectService cs = new ConnectService(); 
+			Connection c = cs.getConnection();
+			stmt =c.createStatement();
+			
+			
+			///////
+			String queryString = "SELECT treningsøkt.dato_tidspunkt, treningsøkt.varighet, treningsøkt.form, treningsøkt.prestasjon, treningsøkt.notat FROM treningsøkt	ORDER BY treningsøkt.dato_tidspunkt LIMIT "+limit;
+			rs = stmt.executeQuery(queryString);
+			return rs;
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
-		else {
-			return null;
-		}
-	}
-		
-	// Gets the current user
-	public static Integer getUserID() {
-		if (userID != null) {
-			return userID;
-		}
-		else {
-			return null;
-		}
-	}
+	
+	return null;
 	
 	
-	// Gets the current name of User
-	public String getUserName() {
-		if (userName!= null) {
-			return userName;
-		}
-		else {
-			return null;
-		}
 	}
-	
 	
 }

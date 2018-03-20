@@ -5,9 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-
 import db_connection.ConnectService;
-import db_connection.getInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +21,6 @@ import javafx.stage.Stage;
 public class ResultController {
 
 	private Statement stm;
-	private PreparedStatement pstm;
 	private ConnectService cs = new ConnectService();
 
 	@FXML
@@ -54,6 +51,7 @@ public class ResultController {
 			exercises.add(rs.getString("navn"));
 		}
 		ex.setItems(exercises);
+		ex.setValue(ex.getItems().get(0));
 	}
 
 	public String getDate(DatePicker date) {
@@ -79,29 +77,31 @@ public class ResultController {
 			ResultSet rs = pstm.executeQuery();
 			ResultSet rs2 = pstm2.executeQuery();
 			String str = "";
+			while (rs2.next()) {
+				str += "Antall økter i perioden: " + rs2.getInt("Antall") + "\n";
+				str += "===================================\n";
+			}
 			while (rs.next()) {
-				str += "Id: " + rs.getInt("id") + "\n";
+				String notat = rs.getString("notat");
+				if (notat == null) {
+					notat = "Ingen notat";
+				}
 				str += "Navn: " + rs.getString("navn") + "\n";
 				str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
 				str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
 				str += "Varighet: " + rs.getTime("varighet") + "\n";
 				str += "Form: " + rs.getInt("form") + "\n";
 				str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
-				str += "Notat: " + rs.getString("notat") + "\n";
-
-				while (rs2.next()) {
-					str += "Antall økter i perioden: " + rs2.getInt("Antall") + "\n";
-					str += "-----------------------------------\n";
-				}
+				str += "Notat: " + notat + "\n";
+				str += "-----------------------------------\n";	
 			}
+			
+			
 			data.setText(str);
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
 			e.printStackTrace();
-		} catch (NullPointerException n) {
-			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
-			n.printStackTrace();
 		}
 
 	}
