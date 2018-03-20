@@ -96,14 +96,15 @@ public class ExerciseGroupController {
 
 	public void removeGroup() {
 		try {
+			
 			String groupName = groups.getSelectionModel().getSelectedItem();
 			
 			String query = "DELETE FROM øvelsesgruppe WHERE navn = ?";
 			Connection c = cs.getConnection();
 			PreparedStatement pstm = c.prepareStatement(query);
 			pstm.setString(1, groupName);
+			groups.getItems().clear();
 			pstm.executeUpdate();
-			update();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			Alerter.error("Feil ved sletting av gruppe", "Sjekk at du har markert gruppe.");
