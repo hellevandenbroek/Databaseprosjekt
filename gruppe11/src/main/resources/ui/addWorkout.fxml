@@ -88,5 +88,6 @@
       </VBox>
       <Label layoutX="237.0" layoutY="6.0" text="Start (kl.)" />
       <Label layoutX="354.0" layoutY="6.0" text="Varighet av treningsøkt" />
+      <Button fx:id="back" onAction="#toBack" layoutX="11.0" layoutY="1.0" mnemonicParsing="false" text="Tilbake" />
    </children>
 </AnchorPane>

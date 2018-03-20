@@ -4,6 +4,9 @@ public class Apparat {
 	private String name;
 	private int id;
 	
+	private int kilo;
+	private int sett;
+	
 	// with apparat
 	public Apparat(String name, int id) {
 		this.name = name;
@@ -20,6 +23,22 @@ public class Apparat {
 	
 	@Override
 	public String toString() {
-		return name;
+		return name + " " + kilo + " " + sett ;
 	}
-}
+	
+	public int getKilo() {
+		return kilo;
+	}
+	
+	public void setKilo(int kilo) {
+		this.kilo = kilo;
+	}
+
+	public int getSett() {
+		return sett;
+	}
+
+	public void setSett(int sett) {
+		this.sett = sett;
+	}
+ }

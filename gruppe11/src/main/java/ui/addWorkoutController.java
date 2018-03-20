@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,6 +16,9 @@ import db_connection.Exercise;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -24,12 +27,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public class addWorkoutController {
 
+	@FXML Button back;
+	
+	
 	//dato, tid, duration
 	@FXML DatePicker date;
-	@FXML TextField hour, minute, duration; // may not use duration
+	@FXML TextField hour, minute;
+	@FXML TextField durationTimer, durationMinutes;
 	
 	//form/prestasjon
 	@FXML ChoiceBox<Integer> form;
@@ -52,6 +60,8 @@ public class addWorkoutController {
 	private ConnectService cs = new ConnectService(); 
 	private Statement stmt = null;
 	
+	private Collection<Exercise> addedList;
+	
 	public void initialize() throws SQLException {
 		
 		Connection c = cs.getConnection();
@@ -62,70 +72,48 @@ public class addWorkoutController {
 
 		// with apparater
 		List<Exercise> exercises = new ArrayList<>();
-        String query = "SELECT * FROM apparat JOIN øvelse";
-		try {
-			rs = stmt.executeQuery(query);
-			
-			while (rs.next()) {
-				Exercise e;
-				String name = rs.getString("navn");
-				System.out.println(name);
-				int id = rs.getInt("øvelse.id");
-				if (rs.getString("øvelse_type").equals("apparatøvelse")) {
-					Apparat ap = new Apparat(rs.getString("navn"), rs.getInt("apparat.id"));					
-					e = new Exercise(name, id, ap);
-				} else {
-					e = new Exercise(name, id);
-				}
-				if (e != null) {
-					for (Exercise ex : exercises) {
-						if (ex.getId() != e.getId()) {
-							System.out.println("added " + e.getName());
-							exercises.add(e);
-						}
-					}
-				}
-			}
-//			query = "SELECT * FROM øvelse";
-//			rs = stmt.executeQuery(query);
-//			
-//			
-//			while (rs.next()) {
-//				String name = rs.getString("navn");
-//				int id = rs.getInt("id");
-//				Exercise e = new Exercise(name, id);
-//				if (!exercises.contains(e)) {
-//					exercises.add(e);
-//				}
-//			}
-			exercises.add(new Exercise("Satans", 666));
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		// without
+		String query = "SELECT øvelse_id, navn FROM øvelse WHERE øvelse_type = \"friøvelse\" ";
+		rs = stmt.executeQuery(query);
+		
+		
+		while (rs.next()) {
+			String name = rs.getString("navn");
+			int id = rs.getInt("øvelse_id");
+			Exercise e = new Exercise(name, id);
+			System.out.println(e);
+			exercises.add(e);
 		}
 		
+		String queryApparat = "SELECT * FROM "
+				+ "øvelse NATURAL JOIN apparatøvelse JOIN apparat "
+				+ "WHERE apparat.apparat_id = apparatøvelse.apparat_id";
+		rs = stmt.executeQuery(queryApparat);
 		
+		while (rs.next()) {
+			String name = rs.getString("øvelse.navn");
+			int id = rs.getInt("øvelse_id");
+			Exercise ea = new Exercise(name, id, new Apparat(rs.getString("apparat.navn"), rs.getInt("apparat_id")));
+			exercises.add(ea);
+		}
+//		
+		exercises.add(new Exercise("Satans", 666));
 
 		
 		// TODO GET INFORMATION FROM DB
 		
-		
-		
-//		Exercise e1 = new Exercise("pushups", 0);
-//		Exercise e2 = new Exercise("situps", 1);
-//		Exercise e3 = new Exercise("planke", 2);
-//		Exercise e4 = new Exercise("run", 3);
-//		Exercise e5 = new Exercise("sofa", 4);
-//		ApparatExercise e6 = new ApparatExercise("bull", 55, new Apparat("shit", 55));
+
 		listViewExercises.getItems().addAll(exercises);	
-		listViewExercises.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)-> {
-			System.out.println(newValue);
-			
+		listViewExercises.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)-> {			
 			if (newValue.getApparat() != null) {
 				showApparatView();
+
 				System.out.println(newValue.getApparat());
 			} else {
 				hideApparatView();
+				kilo.setValue(null);
+				sett.setValue(null);
 				System.out.println("Exercise does not have an apparat.");
 			}
 			
@@ -160,23 +148,30 @@ public class addWorkoutController {
 	
 	public void addExercise() {
 		Exercise e = listViewExercises.getSelectionModel().getSelectedItem();
-		addedExercises.getItems().add(e);
-		if (e.getApparat() != null) {
-			System.out.println("This is apparatly an apparat.");
-		} else {
-			System.out.println("This is not.");
+		if (!addedExercises.getItems().contains(e)) {
+			if (e.hasApparat()) {
+				e.getApparat().setKilo(kilo.getValue());
+				e.getApparat().setSett(sett.getValue());
+			}
+			addedExercises.getItems().add(e);
+			addedList.add(e);
 		}
 	}
 	
-	public void addSelected() {
+	public void addSelected() throws SQLException {
 		// TODO send to database
+		LocalDate dateV = date.getValue();
+		int durationTimerV = Integer.parseInt(durationTimer.getText());
+		int durationMinutesV = Integer.parseInt(durationMinutes.getText());
+		int formV = form.getValue();
+		int prestasjonV = prestasjon.getValue();
+		String notatV = notat.getText();
+		
+		// inserting into data base
+//		Connection c = cs.getConnection();
+//		stmt = c.createStatement();
+		
 		clearFields();
-	}
-	
-	public void addSelectedAndClose() {
-		// TODO send to database
-		clearFields();
-		// TODO close window
 	}
 	
 	public void clearFields() {
@@ -191,6 +186,19 @@ public class addWorkoutController {
 		minute.clear();
 	}
 	
-	
+	public void toBack() {
+		try {
+			Stage stag = (Stage) back.getScene().getWindow();
+	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+	        Parent root1 = (Parent) fxmlLoader.load();
+	        Stage stage = new Stage();
+	        stage.setScene(new Scene(root1));  
+	        stage.show();          
+	        stag.close();
+	    }
+	    catch(Exception e) {
+	       e.printStackTrace();
+	    }
+	}	
 	
 }
