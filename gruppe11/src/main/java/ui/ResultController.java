@@ -82,14 +82,17 @@ public class ResultController {
 				str += "===================================\n";
 			}
 			while (rs.next()) {
-				str += "Id: " + rs.getInt("øvelse_id") + "\n";
+				String notat = rs.getString("notat");
+				if (notat == null) {
+					notat = "Ingen notat";
+				}
 				str += "Navn: " + rs.getString("navn") + "\n";
 				str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
 				str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
 				str += "Varighet: " + rs.getTime("varighet") + "\n";
 				str += "Form: " + rs.getInt("form") + "\n";
 				str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
-				str += "Notat: " + rs.getString("notat") + "\n";
+				str += "Notat: " + notat + "\n";
 				str += "-----------------------------------\n";	
 			}
 			
