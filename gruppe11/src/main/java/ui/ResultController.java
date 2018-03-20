@@ -99,12 +99,9 @@ public class ResultController {
 			
 			data.setText(str);
 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
 			e.printStackTrace();
-		} catch (NullPointerException n) {
-			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
-			n.printStackTrace();
 		}
 
 	}

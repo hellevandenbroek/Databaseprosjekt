@@ -24,23 +24,29 @@ public class OktController {
 	TextArea rsText;
 	
 	public void runRead() throws SQLException{
-		ResultSet rs = getInfo.getWorkouts(Integer.parseInt(input.getText()));
-		String str = "";
-		rsText.clear();
-		input.clear();
-		while (rs.next()) {
-			String notat = rs.getString("notat");
-			if (notat == null) {
-				notat = "Ingen notat";
+		try {
+			
+			ResultSet rs = getInfo.getWorkouts(Integer.parseInt(input.getText()));
+			String str = "";
+			rsText.clear();
+			input.clear();
+			while (rs.next()) {
+				String notat = rs.getString("notat");
+				if (notat == null) {
+					notat = "Ingen notat";
+				}
+				str += "Dato: " + rs.getString("dato_tidspunkt") + "\n";
+				str += "Varighet: " + rs.getString("varighet") + "\n";
+				str += "Din form: " + rs.getString("form") + "\n";
+				str += "Din prestasjon: " + rs.getString("prestasjon") + "\n";
+				str += "Notat: " + notat + "\n";
+				str += "================================\n";
 			}
-			str += "Dato: " + rs.getString("dato_tidspunkt") + "\n";
-			str += "Varighet: " + rs.getString("varighet") + "\n";
-			str += "Din form: " + rs.getString("form") + "\n";
-			str += "Din prestasjon: " + rs.getString("prestasjon") + "\n";
-			str += "Notat: " + notat + "\n";
-			str += "================================\n";
+			rsText.setText(str);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Alerter.error("Feil i antall", "Sjekk at du skrev et tall.");
 		}
-		rsText.setText(str);
 	}
 	
 	public void toBack() {
