@@ -21,7 +21,12 @@
                <children>
                   <Label prefHeight="18.0" prefWidth="131.0" text="Alle øvelsesgrupper: " />
                   <ListView fx:id="groups" onMouseClicked="#toShow" prefHeight="162.0" prefWidth="250.0" />
-                  <Button fx:id="deleteGroup" mnemonicParsing="false" onAction="#removeGroup" text="Slett markert gruppe">
+                  <Button mnemonicParsing="false" onAction="#toShow" text="Vis øvelser">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#removeGroup" text="Slett markert gruppe">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>

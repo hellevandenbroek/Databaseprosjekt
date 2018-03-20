@@ -103,6 +103,7 @@ public class ExerciseGroupController {
 			PreparedStatement pstm = c.prepareStatement(query);
 			pstm.setString(1, groupName);
 			pstm.executeUpdate();
+			update();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			Alerter.error("Feil ved sletting av gruppe", "Sjekk at du har markert gruppe.");
