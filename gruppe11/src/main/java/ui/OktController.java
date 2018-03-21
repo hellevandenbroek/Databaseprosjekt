@@ -51,13 +51,10 @@ public class OktController {
 	
 	public void toBack() {
 		try {
-			Stage stag = (Stage) backButton.getScene().getWindow();
+			Stage stage = (Stage) backButton.getScene().getWindow();
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
 			Parent root1 = (Parent) fxmlLoader.load();
-			Stage stage = new Stage();
 			stage.setScene(new Scene(root1));
-			stage.show();
-			stag.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
