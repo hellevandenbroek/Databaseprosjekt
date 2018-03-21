@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.ExerciseGroupController">
+<VBox prefHeight="600.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.ExerciseGroupController">
    <children>
       <Button fx:id="back" minWidth="66.0" mnemonicParsing="false" onAction="#back" text="Tilbake">
          <VBox.margin>
@@ -23,22 +23,22 @@
                   <ListView fx:id="groups" onMouseClicked="#toShow" prefHeight="185.0" prefWidth="250.0" />
                   <Button mnemonicParsing="false" onAction="#toShow" prefHeight="26.0" prefWidth="351.0" text="Vis øvelser for gruppe">
                      <VBox.margin>
-                        <Insets left="5.0" right="5.0" top="5.0" />
+                        <Insets top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#removeGroup" prefHeight="26.0" prefWidth="281.0" text="Slett markert gruppe">
+                  <Button mnemonicParsing="false" onAction="#removeGroup" prefHeight="27.0" prefWidth="270.0" text="Slett markert gruppe">
                      <VBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
                   <HBox prefWidth="180.0">
                      <children>
-                        <TextField fx:id="name" focusTraversable="false" prefHeight="26.0" prefWidth="183.0" promptText="Navn på ny øvelsesgruppe">
+                        <TextField fx:id="name" focusTraversable="false" prefHeight="27.0" prefWidth="185.0" promptText="Navn på ny øvelsesgruppe">
                            <HBox.margin>
                               <Insets right="5.0" />
                            </HBox.margin>
                         </TextField>
-                        <Button fx:id="add" mnemonicParsing="false" onAction="#toAdd" prefHeight="27.0" prefWidth="90.0" text="Legg til" />
+                        <Button fx:id="add" mnemonicParsing="false" onAction="#toAdd" prefHeight="27.0" prefWidth="68.0" text="Legg til" />
                      </children>
                   </HBox>
                </children>
