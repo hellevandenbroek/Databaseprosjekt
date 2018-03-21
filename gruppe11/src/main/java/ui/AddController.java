@@ -32,9 +32,11 @@ public class AddController {
 	private ChoiceBox<String> type;
 
 	private ConnectService cs = new ConnectService();
+	
+	private enum Types{friøvelse, apparatøvelse};
 
 	public void initialize() {
-		type.setItems(FXCollections.observableArrayList("friøvelse", "apparatøvelse"));
+		type.setItems(FXCollections.observableArrayList(String.valueOf(Types.apparatøvelse), String.valueOf(Types.friøvelse)));
 	}
 
 	public void addApp() throws SQLException {
@@ -49,6 +51,10 @@ public class AddController {
 			pstm.setString(1, appName);
 			pstm.setString(2, description);
 			pstm.executeUpdate();
+			Alerter.info("Success!", appName + " is now added to database");
+		} catch (Exception e) {
+			e.printStackTrace();
+			
 		}
 		
 	}
@@ -56,12 +62,14 @@ public class AddController {
 	public void addEx() throws SQLException {
 		String exName = inputEx.getText();
 		String typeName = type.getValue();
-		String query = "INSERT INTO øvelse(navn, type) VALUES (?,?)";
+		String query = "INSERT INTO øvelse(navn, øvelse_type) VALUES (?,?)";
 		try (Connection conn = cs.getConnection(); 
 				PreparedStatement pstm = conn.prepareStatement(query)) {
 			pstm.setString(1, exName);
 			pstm.setString(2, typeName);
 			pstm.executeUpdate();
+			inputEx.clear();
+			Alerter.info("Success!", exName + " is now added to database");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
