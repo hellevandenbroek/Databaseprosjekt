@@ -66,21 +66,22 @@ public class ExerciseGroupController {
 
 	// Legger til en ny øvelsesgruppe i databasen
 	public void toAdd() throws SQLException {
-		try {
+		String query = "INSERT INTO øvelsesgruppe (navn) VALUES (?)";
+		try (Connection conn = cs.getConnection(); PreparedStatement pstm = conn.prepareStatement(query)) {
 			String groupName = name.getText();
 			if (groupName.length() > 0 && isfree(groupName)) {
 				groups.getItems().clear(); // sletter tidligere innhold
-				String query = "INSERT INTO øvelsesgruppe (navn) VALUES (?)";
-				PreparedStatement pstm = cs.getConnection().prepareStatement(query);
+
 				pstm.setString(1, groupName);
 				pstm.executeUpdate();
 
 				// oppdaterer øvelsesgrupper
 				String query1 = "SELECT navn FROM øvelsesgruppe";
 				stm = cs.getConnection().createStatement();
-				ResultSet rs1 = stm.executeQuery(query1);
-				while (rs1.next()) {
-					groups.getItems().add(rs1.getString("navn"));
+				try (Statement stm = conn.createStatement(); ResultSet rs1 = stm.executeQuery(query1)) {
+					while (rs1.next()) {
+						groups.getItems().add(rs1.getString("navn"));
+					}
 				}
 				name.clear();
 			} else {
@@ -99,16 +100,16 @@ public class ExerciseGroupController {
 			String groupName = groups.getSelectionModel().getSelectedItem();
 			if (groupName != null) {
 				String query = "DELETE FROM øvelsesgruppe WHERE navn = ?";
-				Connection c = cs.getConnection();
-				PreparedStatement pstm = c.prepareStatement(query);
-				pstm.setString(1, groupName);
-				groups.getItems().clear();
-				pstm.executeUpdate();
-				String query1 = "SELECT navn FROM øvelsesgruppe";
-				stm = cs.getConnection().createStatement();
-				ResultSet rs1 = stm.executeQuery(query1);
-				while (rs1.next()) {
-					groups.getItems().add(rs1.getString("navn"));
+				try (Connection conn = cs.getConnection(); PreparedStatement pstm = conn.prepareStatement(query);) {
+					pstm.setString(1, groupName);
+					groups.getItems().clear();
+					pstm.executeUpdate();
+					String query1 = "SELECT navn FROM øvelsesgruppe";
+					try (Statement stm = conn.createStatement(); ResultSet rs1 = stm.executeQuery(query1)) {
+						while (rs1.next()) {
+							groups.getItems().add(rs1.getString("navn"));
+						}
+					}
 				}
 				name.clear();
 			} else {
@@ -122,26 +123,29 @@ public class ExerciseGroupController {
 
 	// sletter markert
 	public void removeEx() throws SQLException {
-		try {
-			Connection c = cs.getConnection();
+		String getID = "SELECT DISTINCT øvelsesgruppe.øvelsesgruppe_id, øvelse.øvelse_ID FROM øvelsesgruppe NATURAL JOIN medlem_av_gruppe JOIN øvelse WHERE øvelsesgruppe.navn = ? AND øvelse.navn = ?";
+		try (Connection conn = cs.getConnection();
+				PreparedStatement pstm1 = conn.prepareStatement(getID)) {
+
 			String selectedGroup = groupSelected();
 			String selectedEx = exSelectedOne();
-			String getID = "SELECT DISTINCT øvelsesgruppe.øvelsesgruppe_id, øvelse.øvelse_ID FROM øvelsesgruppe NATURAL JOIN medlem_av_gruppe JOIN øvelse WHERE øvelsesgruppe.navn = ? AND øvelse.navn = ?";
-			PreparedStatement pstm1 = c.prepareStatement(getID);
 			pstm1.setString(1, selectedGroup);
 			pstm1.setString(2, selectedEx);
-			ResultSet rs = pstm1.executeQuery();
-			Integer groupId = null, exId = null;
-			while (rs.next()) {
-				groupId = rs.getInt(1);
-				exId = rs.getInt(2);
+			try(ResultSet rs = pstm1.executeQuery()){
+				Integer groupId = null, exId = null;
+				while (rs.next()) {
+					groupId = rs.getInt(1);
+					exId = rs.getInt(2);
+				}
+				String query = "DELETE FROM medlem_av_gruppe WHERE øvelsesgruppe_id = ? AND øvelse_id = ?";
+				try (PreparedStatement pstm = conn.prepareStatement(query)) {
+					pstm.setInt(1, groupId);
+					pstm.setInt(2, exId);
+					pstm.executeUpdate();
+					update();
+				}
 			}
-			String query = "DELETE FROM medlem_av_gruppe WHERE øvelsesgruppe_id = ? AND øvelse_id = ?";
-			PreparedStatement pstm = c.prepareStatement(query);
-			pstm.setInt(1, groupId);
-			pstm.setInt(2, exId);
-			pstm.executeUpdate();
-			update();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Alerter.error("Feil ved sletting", "Sjekk at du har markert rett.");
@@ -150,30 +154,35 @@ public class ExerciseGroupController {
 
 	// legger til markert
 	public void addEx() throws SQLException {
-		try {
+		String getID = "SELECT DISTINCT øvelsesgruppe.øvelsesgruppe_id, øvelse.øvelse_ID FROM øvelsesgruppe JOIN øvelse WHERE øvelsesgruppe.navn = ? AND øvelse.navn = ?";
+		try (Connection conn = cs.getConnection();
+				PreparedStatement pstm1 = conn.prepareStatement(getID);
+				) {
 
-			Connection c = cs.getConnection();
 			String selectedGroup = groupSelected();
 			String selectedEx = exSelectedTwo();
-			String getID = "SELECT DISTINCT øvelsesgruppe.øvelsesgruppe_id, øvelse.øvelse_ID FROM øvelsesgruppe JOIN øvelse WHERE øvelsesgruppe.navn = ? AND øvelse.navn = ?";
-			PreparedStatement pstm1 = c.prepareStatement(getID);
+
 			pstm1.setString(1, selectedGroup);
 			pstm1.setString(2, selectedEx);
-			ResultSet rs = pstm1.executeQuery();
-			Integer groupId = null, exId = null;
-			while (rs.next()) {
-				groupId = rs.getInt(1);
-				exId = rs.getInt(2);
-			}
+			try (ResultSet rs = pstm1.executeQuery()){
+				Integer groupId = null, exId = null;
+				while (rs.next()) {
+					groupId = rs.getInt(1);
+					exId = rs.getInt(2);
+				}
 
-			if (!isInGroup(selectedGroup, selectedEx)) {
-				String query = "INSERT INTO medlem_av_gruppe (øvelse_id, øvelsesgruppe_id) VALUES (?, ?)";
-				PreparedStatement pstm = c.prepareStatement(query);
-				pstm.setInt(1, exId);
-				pstm.setInt(2, groupId);
-				pstm.executeUpdate();
+				if (!isInGroup(selectedGroup, selectedEx)) {
+					String query = "INSERT INTO medlem_av_gruppe (øvelse_id, øvelsesgruppe_id) VALUES (?, ?)";
+					try (PreparedStatement pstm = conn.prepareStatement(query)) {
+						pstm.setInt(1, exId);
+						pstm.setInt(2, groupId);
+						pstm.executeUpdate();
+					}
+				}
+				update();
 			}
-			update();
+			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Alerter.error("Feil ved innsetting", "Sjekk at markeringene dine er rett.");
@@ -192,14 +201,18 @@ public class ExerciseGroupController {
 	public void update() throws SQLException {
 		exercises.getItems().clear();
 		String query = "SELECT øvelse.navn FROM øvelse NATURAL JOIN medlem_av_gruppe JOIN øvelsesgruppe WHERE øvelsesgruppe.navn = (?) AND øvelsesgruppe.øvelsesgruppe_id = medlem_av_gruppe.øvelsesgruppe_id";
-		PreparedStatement pstm = cs.getConnection().prepareStatement(query);
-		pstm.setString(1, groupSelected());
-		ResultSet rs = pstm.executeQuery();
-		while (rs.next()) {
-			exercises.getItems().add(rs.getString("navn"));
-		}
-		if (exercises.getItems().isEmpty()) {
-			exercises.setPlaceholder(new Label("Inneholder ingen øvelser."));
+		try (Connection conn = cs.getConnection(); PreparedStatement pstm = conn.prepareStatement(query)) {
+			pstm.setString(1, groupSelected());
+			try (ResultSet rs = pstm.executeQuery()) {
+				while (rs.next()) {
+					exercises.getItems().add(rs.getString("navn"));
+				}
+				if (exercises.getItems().isEmpty()) {
+					exercises.setPlaceholder(new Label("Inneholder ingen øvelser."));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -220,17 +233,18 @@ public class ExerciseGroupController {
 		String query = "SELECT øvelsesgruppe.navn FROM øvelsesgruppe";
 		List<String> all = new ArrayList<String>();
 
-		Connection c = cs.getConnection();
-		Statement st = c.createStatement();
-		ResultSet rs = st.executeQuery(query);
-		while (rs.next()) {
-			all.add(rs.getString("navn"));
+		try (Connection conn = cs.getConnection();
+				Statement st = conn.createStatement();
+				ResultSet rs = st.executeQuery(query)) {
+			while (rs.next()) {
+				all.add(rs.getString("navn"));
+			}
+			if (all.contains(name)) {
+				Alerter.error("Gruppe finnes allerede", "Vennligst velg et annet navn!");
+				return false;
+			}
+			return true;
 		}
-		if (all.contains(name)) {
-			Alerter.error("Gruppe finnes allerede", "Vennligst velg et annet navn!");
-			return false;
-		}
-		return true;
 	}
 
 	// Håndterer tilbakeknappen

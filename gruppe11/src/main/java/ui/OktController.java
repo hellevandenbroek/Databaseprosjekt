@@ -1,8 +1,10 @@
 package ui;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import db_connection.getInfo;
+import db_connection.ConnectService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,12 +25,15 @@ public class OktController {
 	@FXML
 	TextArea rsText;
 	
+	private ConnectService cs = new ConnectService();
+	
 	public void runRead() throws SQLException{
-		try {
-			
-			ResultSet rs = getInfo.getWorkouts(Integer.parseInt(input.getText()));
+		String query = "SELECT treningsøkt.dato_tidspunkt, treningsøkt.varighet, treningsøkt.form, treningsøkt.prestasjon, treningsøkt.notat FROM treningsøkt ORDER BY treningsøkt.dato_tidspunkt LIMIT ?";
+		try (Connection conn = cs.getConnection(); PreparedStatement pstm = conn.prepareStatement(query)){
+			pstm.setInt(1, Integer.parseInt(input.getText()));
+			System.out.println(pstm);
+			ResultSet rs = pstm.executeQuery();
 			String str = "";
-			rsText.clear();
 			input.clear();
 			while (rs.next()) {
 				String notat = rs.getString("notat");

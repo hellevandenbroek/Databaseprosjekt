@@ -58,7 +58,7 @@
       <HBox alignment="CENTER">
          <children>
             <Region prefWidth="53.0" HBox.hgrow="ALWAYS" />
-            <TextArea fx:id="data" editable="false" prefHeight="395.0" prefWidth="603.0" />
+            <TextArea id="text-area" editable="false" prefHeight="395.0" prefWidth="603.0" />
             <Region prefWidth="53.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>

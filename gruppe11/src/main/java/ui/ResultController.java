@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 
 public class ResultController {
 
-	private Statement stm;
 	private ConnectService cs = new ConnectService();
 
 	@FXML
@@ -44,14 +43,13 @@ public class ResultController {
 	public void initialize() throws SQLException {
 		ObservableList<String> exercises = FXCollections.observableArrayList();
 		String query = "SELECT navn FROM `øvelse`";
-		Connection c = cs.getConnection();
-		stm = c.createStatement();
-		ResultSet rs = stm.executeQuery(query);
-		while (rs.next()) {
-			exercises.add(rs.getString("navn"));
+		try(Connection conn = cs.getConnection(); Statement stm = conn.createStatement(); ResultSet rs = stm.executeQuery(query)){
+			while (rs.next()) {
+				exercises.add(rs.getString("navn"));
+			}
+			ex.setItems(exercises);
+			ex.setValue(ex.getItems().get(0));
 		}
-		ex.setItems(exercises);
-		ex.setValue(ex.getItems().get(0));
 	}
 
 	public String getDate(DatePicker date) {
@@ -61,11 +59,9 @@ public class ResultController {
 	public void getData() {
 		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
 		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt > (?) < (?);";
-		Connection c;
-		try {
-			c = cs.getConnection();
-			PreparedStatement pstm = c.prepareStatement(query);
-			PreparedStatement pstm2 = c.prepareStatement(query2);
+		try (Connection conn = cs.getConnection();
+				PreparedStatement pstm = conn.prepareStatement(query);
+				PreparedStatement pstm2 = conn.prepareStatement(query2);) {
 			String fDate = getDate(fromDate);
 			String tDate = getDate(toDate);
 			String exercise = ex.getSelectionModel().getSelectedItem();
@@ -74,30 +70,28 @@ public class ResultController {
 			pstm.setString(3, exercise);
 			pstm2.setString(1, fDate);
 			pstm2.setString(2, tDate);
-			ResultSet rs = pstm.executeQuery();
-			ResultSet rs2 = pstm2.executeQuery();
-			String str = "";
-			while (rs2.next()) {
-				str += "Antall økter i perioden: " + rs2.getInt("Antall") + "\n";
-				str += "===================================\n";
-			}
-			while (rs.next()) {
-				String notat = rs.getString("notat");
-				if (notat == null) {
-					notat = "Ingen notat";
+			try (ResultSet rs = pstm.executeQuery(); ResultSet rs2 = pstm2.executeQuery()) {
+				String str = "";
+				while (rs2.next()) {
+					str += "Antall økter i perioden: " + rs2.getInt("Antall") + "\n";
+					str += "===================================\n";
 				}
-				str += "Navn: " + rs.getString("navn") + "\n";
-				str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
-				str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
-				str += "Varighet: " + rs.getTime("varighet") + "\n";
-				str += "Form: " + rs.getInt("form") + "\n";
-				str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
-				str += "Notat: " + notat + "\n";
-				str += "-----------------------------------\n";	
+				while (rs.next()) {
+					String notat = rs.getString("notat");
+					if (notat == null) {
+						notat = "Ingen notat";
+					}
+					str += "Navn: " + rs.getString("navn") + "\n";
+					str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
+					str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
+					str += "Varighet: " + rs.getTime("varighet") + "\n";
+					str += "Form: " + rs.getInt("form") + "\n";
+					str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
+					str += "Notat: " + notat + "\n";
+					str += "-----------------------------------\n";
+				}
+				data.setText(str);
 			}
-			
-			
-			data.setText(str);
 
 		} catch (Exception e) {
 			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");

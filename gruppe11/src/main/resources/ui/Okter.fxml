@@ -22,7 +22,7 @@
                      </font>
                   </Label>
                   <Button fx:id="ReadButton" layoutX="321.0" layoutY="109.0" mnemonicParsing="false" onAction="#runRead" text="Vis Antall" />
-                  <TextArea fx:id="rsText" layoutX="56.0" layoutY="164.0" prefHeight="353.0" prefWidth="599.0" />
+                  <TextArea fx:id ="rsText" layoutX="56.0" layoutY="164.0" prefHeight="353.0" prefWidth="599.0" />
                   <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#toBack" text="Tilbake" />
                   <Text layoutX="151.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Vis dine siste ">
                      <font>
