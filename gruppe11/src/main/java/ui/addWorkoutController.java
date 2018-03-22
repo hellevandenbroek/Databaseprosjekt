@@ -33,6 +33,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -56,7 +57,7 @@ public class addWorkoutController {
 	@FXML ListView<Exercise> listViewExercises, addedExercises;
 
 	// notat
-	@FXML TextField notat;
+	@FXML TextArea notat;
 
 	//apparat
 	@FXML Label apparatLabelName, kiloLabel, settLabel;
@@ -277,9 +278,11 @@ public class addWorkoutController {
 		PreparedStatement ps2 = c.prepareStatement(sb2.toString());
 		System.out.println("Updating last time, with apparats");
 		ps2.executeUpdate();
+		Alerter.info("Vellykket!", "Treningsøkten er nå lagt til i din dagbok!");
 		clearFields();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			Alerter.error("Feil ved innsetting", "Kunne ikke legge til treningsøkt. Vennligst sjekk at alt ser riktig ut.");
 		}
 	}
 

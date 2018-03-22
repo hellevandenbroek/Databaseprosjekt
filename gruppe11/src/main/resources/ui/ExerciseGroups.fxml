@@ -58,12 +58,12 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="252.0" prefWidth="150.0">
                <children>
-                  <Button fx:id="one" mnemonicParsing="false" onAction="#removeEx" prefHeight="27.0" prefWidth="125.0" text="Fjern øvelse -&gt;">
+                  <Button fx:id="one" mnemonicParsing="false" onAction="#removeEx" prefHeight="27.0" prefWidth="135.0" text="Fjern øvelse -&gt;">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="two" mnemonicParsing="false" onAction="#addEx" prefHeight="27.0" prefWidth="125.0" text="&lt;- Legg til øvelse">
+                  <Button fx:id="two" mnemonicParsing="false" onAction="#addEx" prefHeight="27.0" prefWidth="135.0" text="&lt;- Legg til øvelse">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
