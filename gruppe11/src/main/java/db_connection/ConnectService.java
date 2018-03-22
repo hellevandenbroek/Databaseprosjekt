@@ -42,11 +42,8 @@ public class ConnectService {
 	}
 
 	public void run() {
-
 		// Connect to MySQL
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
+		try (Connection conn = this.getConnection()) {
 			System.out.println("Connected to database");
 		} catch (SQLException e) {
 			System.out.println("ERROR: Could not connect to the database");
