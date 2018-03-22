@@ -166,7 +166,9 @@ public class addWorkoutController {
 		LocalDate dateV = date.getValue();
 
 		String notatV = notat.getText();
-
+		if (addedExercises.getItems().isEmpty()) {
+			throw new IllegalArgumentException("List is empty. Can not add.");
+		}
 		
 		try (Connection c = cs.getConnection()) {;
 		StringBuilder query = new StringBuilder(
