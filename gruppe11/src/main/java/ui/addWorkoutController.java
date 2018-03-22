@@ -164,6 +164,7 @@ public class addWorkoutController {
 		// TODO send to database
 		LocalDate dateV = date.getValue();
 		if (addedExercises.getItems().isEmpty()) {
+			Alerter.error("Lista er tom", "Du må legge til øvelser. Treningsøkten kan ikke være tom.");
 			throw new IllegalArgumentException("List is empty. Can not add.");
 		}
 		
