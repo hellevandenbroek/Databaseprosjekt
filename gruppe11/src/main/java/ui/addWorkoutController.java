@@ -317,6 +317,7 @@ public class addWorkoutController {
 		durationMinutes.setText("45"); durationTimer.setText("1");
 		hour.setText("12"); minute.setText("35");	
 		form.setValue(9);
+		System.out.println();
 		prestasjon.setValue(3);
 		notat.setText("This was added automatically...");
 	}
