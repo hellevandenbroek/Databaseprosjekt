@@ -14,7 +14,12 @@
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.AddController">
    <children>
-      <Region prefHeight="600.0" prefWidth="190.0" HBox.hgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#toBack" text="Tilbake">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin>
+      </Button>
+      <Region prefHeight="600.0" prefWidth="134.0" HBox.hgrow="ALWAYS" />
       <VBox alignment="CENTER">
          <children>
             <Label alignment="TOP_LEFT" contentDisplay="TOP" prefHeight="47.0" prefWidth="187.0" text="Legg til apparat eller øvelser" textAlignment="CENTER" wrapText="true">

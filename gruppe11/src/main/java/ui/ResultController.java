@@ -43,7 +43,9 @@ public class ResultController {
 	public void initialize() throws SQLException {
 		ObservableList<String> exercises = FXCollections.observableArrayList();
 		String query = "SELECT navn FROM `øvelse`";
-		try(Connection conn = cs.getConnection(); Statement stm = conn.createStatement(); ResultSet rs = stm.executeQuery(query)){
+		try(Connection conn = cs.getConnection(); 
+				Statement stm = conn.createStatement(); 
+				ResultSet rs = stm.executeQuery(query)){
 			while (rs.next()) {
 				exercises.add(rs.getString("navn"));
 			}

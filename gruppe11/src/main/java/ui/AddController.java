@@ -7,10 +7,14 @@ import java.sql.SQLException;
 import db_connection.ConnectService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class AddController {
 	@FXML
@@ -32,11 +36,14 @@ public class AddController {
 	private ChoiceBox<String> type;
 
 	private ConnectService cs = new ConnectService();
-	
-	private enum Types{friøvelse, apparatøvelse};
+
+	private enum Types {
+		friøvelse, apparatøvelse
+	};
 
 	public void initialize() {
-		type.setItems(FXCollections.observableArrayList(String.valueOf(Types.apparatøvelse), String.valueOf(Types.friøvelse)));
+		type.setItems(FXCollections.observableArrayList(String.valueOf(Types.apparatøvelse),
+				String.valueOf(Types.friøvelse)));
 	}
 
 	public void addApp() throws SQLException {
@@ -47,24 +54,23 @@ public class AddController {
 		}
 		String query = "INSERT INTO apparat(navn, bruksmåte) VALUES (?,?)";
 		try (Connection conn = cs.getConnection();
-				PreparedStatement pstm = cs.getConnection().prepareStatement(query)){
+				PreparedStatement pstm = cs.getConnection().prepareStatement(query)) {
 			pstm.setString(1, appName);
 			pstm.setString(2, description);
 			pstm.executeUpdate();
 			Alerter.info("Success!", appName + " is now added to database");
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		}
-		
+
 	}
 
 	public void addEx() throws SQLException {
 		String exName = inputEx.getText();
 		String typeName = type.getValue();
 		String query = "INSERT INTO øvelse(navn, øvelse_type) VALUES (?,?)";
-		try (Connection conn = cs.getConnection(); 
-				PreparedStatement pstm = conn.prepareStatement(query)) {
+		try (Connection conn = cs.getConnection(); PreparedStatement pstm = conn.prepareStatement(query)) {
 			pstm.setString(1, exName);
 			pstm.setString(2, typeName);
 			pstm.executeUpdate();
@@ -73,8 +79,16 @@ public class AddController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// pstm.executeUpdate();
 	}
 
+	public void toBack() {
+		try {
+			Stage stage = (Stage) btnAddApp.getScene().getWindow();
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+			Parent root1 = (Parent) fxmlLoader.load();
+			stage.setScene(new Scene(root1));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
