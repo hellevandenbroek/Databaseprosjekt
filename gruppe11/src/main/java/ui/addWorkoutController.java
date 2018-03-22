@@ -9,14 +9,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-import javax.management.Query;
 
 import db_connection.Apparat;
 import db_connection.ConnectService;
@@ -32,7 +30,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -134,6 +131,7 @@ public class addWorkoutController {
 
 		}
 
+		date.setValue(new LocalDateStringConverter().fromString("3/5/2018"));
 		kilo.setItems(five150);
 		form.setItems(oneTen);
 		prestasjon.setItems(oneTen);
@@ -246,7 +244,7 @@ public class addWorkoutController {
 		System.out.println("preparing second insertion");
 		StringBuilder query2 = new StringBuilder();
 			boolean first = true;
-			query2.append("INSERT INTO utførte_øvelse VALUES ");
+			query2.append("INSERT INTO utførte_øvelse(treningsøkt_id, øvelse_id) VALUES ");
 			for (Exercise e : addedExercises.getItems()) {
 				if (first) {
 					first = false;
