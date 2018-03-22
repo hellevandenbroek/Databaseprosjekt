@@ -203,7 +203,9 @@ public class addWorkoutController {
 
 			pstmt.setTimestamp(1, new Timestamp(cal.getTimeInMillis()));
 		} else {
-			pstmt.setNull(1, Types.TIMESTAMP);
+			
+			Alerter.error("Vennligst velg dato", "Du må velge dato og tidspunkt for treningsøkten");
+			throw new IllegalStateException();
 		}
 		// 2
 		if (!durationTimer.getText().equals("") || !durationMinutes.getText().equals("")) {
