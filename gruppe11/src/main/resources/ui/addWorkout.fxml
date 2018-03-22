@@ -128,5 +128,6 @@
             <Button fx:id="addSelected" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addSelected" text="Legg til treningsøkt" />
          </children>
       </HBox>
+      <Button fx:id="fillValues" mnemonicParsing="false" onAction="#fillIn" text="Fyll inn automatisk" />
    </children>
 </VBox>

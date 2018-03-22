@@ -2,7 +2,6 @@ package ui;
 
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,6 +39,7 @@ public class addWorkoutController {
 
 	@FXML Button back;
 
+	@FXML Button fillValues;
 
 	//dato, tid, duration
 	@FXML DatePicker date;
@@ -131,7 +131,6 @@ public class addWorkoutController {
 
 		}
 
-		date.setValue(new LocalDateStringConverter().fromString("3/5/2018"));
 		kilo.setItems(five150);
 		form.setItems(oneTen);
 		prestasjon.setItems(oneTen);
@@ -311,5 +310,16 @@ public class addWorkoutController {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void fillIn() {
+		date.setValue(new LocalDateStringConverter().fromString("3/5/2018"));
+		
+		kilo.setValue(55); sett.setValue(3);
+		durationMinutes.setText("45"); durationTimer.setText("1");
+		hour.setText("12"); minute.setText("35");
+		form.setValue(9);
+		prestasjon.setValue(3);
+		notat.setText("This was added automatically...");
 	}
 }
