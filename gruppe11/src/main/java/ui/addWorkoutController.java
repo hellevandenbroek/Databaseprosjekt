@@ -311,13 +311,15 @@ public class addWorkoutController {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * Enters value into some fields automatically, saving time.
+	 * 
+	 */
 	public void fillIn() {
 		date.setValue(new LocalDateStringConverter().fromString("3/5/2018"));
-		
 		kilo.setValue(55); sett.setValue(3);
 		durationMinutes.setText("45"); durationTimer.setText("1");
-		hour.setText("12"); minute.setText("35");
+		hour.setText("12"); minute.setText("35");	
 		form.setValue(9);
 		prestasjon.setValue(3);
 		notat.setText("This was added automatically...");
