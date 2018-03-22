@@ -29,6 +29,10 @@ public class Exercise {
 		return ap;
 	}
 	
+	public boolean hasApparat() {
+		return (ap != null);
+	}
+	
 	@Override
 	public String toString() {
 		return name;

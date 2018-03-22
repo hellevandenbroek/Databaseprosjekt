@@ -2,12 +2,21 @@ package ui;
 
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
+
+import javax.management.Query;
 
 import db_connection.Apparat;
 import db_connection.ConnectService;
@@ -15,6 +24,9 @@ import db_connection.Exercise;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -23,139 +35,280 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.util.converter.LocalDateStringConverter;
 
 public class addWorkoutController {
 
+	@FXML Button back;
+
+
 	//dato, tid, duration
 	@FXML DatePicker date;
-	@FXML TextField hour, minute, duration; // may not use duration
-	
+	@FXML TextField hour, minute;
+	@FXML TextField durationTimer, durationMinutes;
+
 	//form/prestasjon
 	@FXML ChoiceBox<Integer> form;
 	@FXML ChoiceBox<Integer> prestasjon;
-	// slider
-	@FXML Label timerLabel, minuttLabel;
-	@FXML Slider timerSlider, minuttSlider;
-	
-	@FXML Button addExercise, addSelected, addSelectedAndClose;
+
+	@FXML Button addExercise, addSelected;
 	@FXML ListView<Exercise> listViewExercises, addedExercises;
-	
+
 	// notat
 	@FXML TextField notat;
-	
+
 	//apparat
 	@FXML Label apparatLabelName, kiloLabel, settLabel;
 	@FXML ChoiceBox<Integer> kilo, sett;
 	@FXML Pane apparatPane;
-	
-	private ConnectService cs = new ConnectService(); 
-	private Statement stmt = null;
-	
-	public void initialize() throws SQLException {
-		
-		Connection c = cs.getConnection();
-		
-		stmt = c.createStatement();
-		
-		ResultSet rs = null;
 
-		// with apparater
-		String query = "SELECT * FROM øvelse NATURAL JOIN apparat NATURAL JOIN apparatøvelse";
-		List<Exercise> exercises = new ArrayList<>();
-		try {
+	private ConnectService cs = new ConnectService();
+	private Statement stmt = null;
+	private Collection<Exercise> addedList = new ArrayList<>();
+
+	public void initialize()  {
+		try (Connection c = cs.getConnection()) {
+			stmt = c.createStatement();
+			ResultSet rs = null;
+			List<Exercise> exercises = new ArrayList<>();
+			String query = "SELECT øvelse_id, navn FROM øvelse WHERE øvelse_type = \"friøvelse\" ";
 			rs = stmt.executeQuery(query);
-			
-			while (rs.next()) {
-				String name = rs.getString("øvelse.navn");
-				int id = rs.getInt("øvelse.id");
-				Apparat ap = new Apparat(rs.getString("apparat.navn"), rs.getInt("apparat.id"));
-				Exercise e = new Exercise(name, id, ap);
-				System.out.println(e);
-				exercises.add(e);
-			}
-			query = "SELECT * FROM øvelse";
-			rs = stmt.executeQuery(query);
-			
 			
 			while (rs.next()) {
 				String name = rs.getString("navn");
-				int id = rs.getInt("id");
+				int id = rs.getInt("øvelse_id");
 				Exercise e = new Exercise(name, id);
-				if (!exercises.contains(e)) {
-					exercises.add(e);
-				}
+				exercises.add(e);
 			}
-			exercises.add(new Exercise("Satans", 555));
-
+			
+			String queryApparat = "SELECT * FROM "
+					+ "øvelse NATURAL JOIN apparatøvelse JOIN apparat "
+					+ "WHERE apparat.apparat_id = apparatøvelse.apparat_id";
+			rs = stmt.executeQuery(queryApparat);
+			
+			while (rs.next()) {
+				String name = rs.getString("øvelse.navn");
+				int id = rs.getInt("øvelse_id");
+				Exercise ea = new Exercise(name, id, new Apparat(rs.getString("apparat.navn"), rs.getInt("apparat_id")));
+				exercises.add(ea);
+			}
+			listViewExercises.getItems().addAll(exercises);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
 
-		
-		// TODO GET INFORMATION FROM DB
-		
-		
-		
-//		Exercise e1 = new Exercise("pushups", 0);
-//		Exercise e2 = new Exercise("situps", 1);
-//		Exercise e3 = new Exercise("planke", 2);
-//		Exercise e4 = new Exercise("run", 3);
-//		Exercise e5 = new Exercise("sofa", 4);
-//		ApparatExercise e6 = new ApparatExercise("bull", 55, new Apparat("shit", 55));
-		listViewExercises.getItems().addAll(exercises);	
 		listViewExercises.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)-> {
-			System.out.println(newValue);
-			
 			if (newValue.getApparat() != null) {
 				showApparatView();
-				System.out.println(newValue.getApparat());
 			} else {
 				hideApparatView();
-				System.out.println("Exercise does not have an apparat.");
+				kilo.setValue(null);
+				sett.setValue(null);
 			}
-			
+
 		});
-		
+
+		kilo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null) {
+				kilo.setValue(newValue);
+			}
+			System.out.println(kilo.getValue());
+		});
+
+		sett.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue != null) {
+				sett.setValue(newValue);
+			}
+			System.out.println(sett.getValue());
+		});
+
 		// adding values to choiceboxes
-		ObservableList<Integer> oneTen = 
+		ObservableList<Integer> oneTen =
 				FXCollections.observableArrayList(
-						1, 2, 3, 4, 5, 6, 7, 8, 9, 10); 
+						1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 		ObservableList<Integer> five150 =  FXCollections.observableArrayList(5);
-		for (int i = 10; i < 150; i+= 5) {
+		for (int i = 10; i < 155; i+= 5) {
 			five150.add(i);
-			
+
 		}
-		
+
 		kilo.setItems(five150);
 		form.setItems(oneTen);
 		prestasjon.setItems(oneTen);
 		sett.setItems(oneTen);
 
 	}
-	
+
 	private void hideApparatView() {
 		// TODO Auto-generated method stub
 		apparatPane.setDisable(true);
-		System.out.println("Did something");
 	}
 
 	public void showApparatView() {
 		apparatPane.setDisable(false);
 	}
-	
+
 	public void addExercise() {
 		Exercise e = listViewExercises.getSelectionModel().getSelectedItem();
-		addedExercises.getItems().add(e);
-		if (e.getApparat() != null) {
-			System.out.println("This is apparatly an apparat.");
-		} else {
-			System.out.println("This is not.");
+		if (!addedExercises.getItems().contains(e)) {
+			if (e.hasApparat() && kilo.getValue() != null && sett.getValue() != null) {
+				e.getApparat().setKilo(kilo.getValue());
+				e.getApparat().setSett(sett.getValue());
+			}
+			addedExercises.getItems().add(e);
+			addedList.add(e);
 		}
 	}
-	
-	
-	
-	
+
+	public void addSelected() {
+		// TODO send to database
+		LocalDate dateV = date.getValue();
+
+		String notatV = notat.getText();
+		if (addedExercises.getItems().isEmpty()) {
+			throw new IllegalArgumentException("List is empty. Can not add.");
+		}
+		
+		try (Connection c = cs.getConnection()) {;
+		StringBuilder query = new StringBuilder(
+				"INSERT INTO "
+						+ "treningsøkt(dato_tidspunkt, varighet, form, prestasjon, notat) "
+						+ "VALUES "
+						+ "(?, ?, ?, ?, ?);");
+		
+
+		PreparedStatement pstmt = c.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS);
+		
+		// Insert into tabellnavn(kilo, sett) values (?,?)
+
+		//1
+		if (dateV != null) {
+			int hourV = 0;
+			int minuteV = 0;
+			if (!hour.getText().equals("") && !minute.getText().equals("")) {
+				hourV = Integer.parseInt(hour.getText());
+				minuteV = Integer.parseInt(minute.getText());
+			}
+			int year = dateV.getYear();
+			int month = dateV.getMonth().getValue();
+			int day = dateV.getDayOfMonth();
+			
+			Calendar cal = Calendar.getInstance();
+
+			cal.set(Calendar.YEAR, year);
+			cal.set(Calendar.MONTH, month);
+			cal.set(Calendar.DAY_OF_MONTH, day);
+
+			cal.set(Calendar.MINUTE, minuteV);
+			cal.set(Calendar.HOUR, hourV);
+
+			pstmt.setTimestamp(1, new Timestamp(cal.getTimeInMillis()));
+		} else {
+			pstmt.setNull(1, Types.TIMESTAMP);
+		}
+		// 2
+		if (!durationTimer.getText().equals("") || !durationMinutes.getText().equals("")) {
+			String fullDuration = durationTimer.getText() + ":" + durationMinutes.getText() + ":00";
+			pstmt.setString(2, fullDuration);
+		} else {
+			pstmt.setNull(2, Types.VARCHAR);
+		}
+		// 3
+		if (form.getValue() != null) {
+			pstmt.setInt(3, form.getValue());
+		} else {
+			pstmt.setNull(3, Types.INTEGER);
+		}
+		// 4
+		if (prestasjon.getValue() != null) {
+			pstmt.setInt(4, prestasjon.getValue());
+		} else {
+			pstmt.setNull(4, Types.INTEGER);
+		}
+		// 5
+		if (!notat.getText().equals("")) {
+			pstmt.setString(5, notat.getText());
+		} else {
+			pstmt.setNull(5, Types.VARCHAR);
+		}
+		pstmt.executeUpdate();	
+		
+		int key = 10000;
+		try (ResultSet genKeys = pstmt.getGeneratedKeys()) {
+			if (genKeys.next()) {
+				key = genKeys.getInt(1);
+			} else {
+				throw new SQLException("Sorry, no treningsøkt_id found.");
+			}
+		}
+		System.out.println("preparing second insertion");
+		StringBuilder query2 = new StringBuilder();
+			boolean first = true;
+			query2.append("INSERT INTO utførte_øvelse VALUES ");
+			for (Exercise e : addedExercises.getItems()) {
+				if (first) {
+					first = false;
+					query2.append("(" + key + ", " + e.getId() + ")");
+					continue;
+				}
+				query2.append(", (" + key + ", " + e.getId() + ")");
+				
+			}
+		query2.append(";");
+		System.out.println(query2);
+		StringBuilder sb2 = new StringBuilder();
+		PreparedStatement ps = c.prepareStatement(query2.toString());
+		ps.executeUpdate();
+		first = true;
+		sb2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ");
+		for (Exercise e : addedExercises.getItems()) {
+			if (e.hasApparat()) {
+				if (first) {
+					sb2.append("(");
+					first = false;
+				} else {
+					sb2.append(" ,(");
+				}
+				sb2.append(key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ")");
+			}
+		}
+		sb2.append(";");
+		PreparedStatement ps2 = c.prepareStatement(sb2.toString());
+		System.out.println("Updating last time, with apparats");
+		ps2.executeUpdate();
+		clearFields();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void clearFields() {
+		notat.clear();
+		date.setValue(null);	
+		addedExercises.getItems().clear();
+		kilo.setValue(null);
+		sett.setValue(null);
+		form.setValue(null);
+		prestasjon.setValue(null);
+		hour.clear();
+		minute.clear();
+		durationMinutes.clear();
+		durationTimer.clear();
+	}
+
+	public void toBack() {
+		try {
+			Stage stag = (Stage) back.getScene().getWindow();
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
+			Parent root1 = (Parent) fxmlLoader.load();
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root1));
+			stage.show();
+			stag.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
