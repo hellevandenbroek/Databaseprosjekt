@@ -62,8 +62,10 @@ public class addWorkoutController {
 	private ConnectService cs = new ConnectService();
 	private Statement stmt = null;
 	private Collection<Exercise> addedList = new ArrayList<>();
+	private Boolean addedExercisesHasApparat;
 
 	public void initialize()  {
+		addedExercisesHasApparat = false;
 		try (Connection c = cs.getConnection()) {
 			stmt = c.createStatement();
 			ResultSet rs = null;
@@ -102,7 +104,7 @@ public class addWorkoutController {
 				kilo.setValue(null);
 				sett.setValue(null);
 			}
-
+			
 		});
 
 		kilo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -151,6 +153,7 @@ public class addWorkoutController {
 			if (e.hasApparat() && kilo.getValue() != null && sett.getValue() != null) {
 				e.getApparat().setKilo(kilo.getValue());
 				e.getApparat().setSett(sett.getValue());
+				addedExercisesHasApparat = true;
 			}
 			addedExercises.getItems().add(e);
 			addedList.add(e);
@@ -255,22 +258,24 @@ public class addWorkoutController {
 		PreparedStatement ps = c.prepareStatement(query2.toString());
 		ps.executeUpdate();
 		first = true;
-		sb2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ");
-		for (Exercise e : addedExercises.getItems()) {
-			if (e.hasApparat()) {
-				if (first) {
-					sb2.append("(");
-					first = false;
-				} else {
-					sb2.append(" ,(");
+		if (addedExercisesHasApparat) {
+			sb2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ");
+			for (Exercise e : addedExercises.getItems()) {
+				if (e.hasApparat()) {
+					if (first) {
+						sb2.append("(");
+						first = false;
+					} else {
+						sb2.append(" ,(");
+					}
+					sb2.append(key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ")");
 				}
-				sb2.append(key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ")");
 			}
+			sb2.append(";");
+			PreparedStatement ps2 = c.prepareStatement(sb2.toString());
+			System.out.println("Updating last time, with apparats");
+			ps2.executeUpdate();
 		}
-		sb2.append(";");
-		PreparedStatement ps2 = c.prepareStatement(sb2.toString());
-		System.out.println("Updating last time, with apparats");
-		ps2.executeUpdate();
 		Alerter.info("Vellykket!", "Treningsøkten er nå lagt til i din dagbok!");
 		clearFields();
 		} catch (SQLException e) {
