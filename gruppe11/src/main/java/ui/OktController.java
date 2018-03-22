@@ -28,7 +28,7 @@ public class OktController {
 	private ConnectService cs = new ConnectService();
 	
 	public void runRead() throws SQLException{
-		String query = "SELECT treningsøkt.dato_tidspunkt, treningsøkt.varighet, treningsøkt.form, treningsøkt.prestasjon, treningsøkt.notat FROM treningsøkt ORDER BY treningsøkt.dato_tidspunkt LIMIT ?";
+		String query = "SELECT treningsøkt.dato_tidspunkt, treningsøkt.varighet, treningsøkt.form, treningsøkt.prestasjon, treningsøkt.notat FROM treningsøkt ORDER BY treningsøkt.dato_tidspunkt DESC LIMIT ?";
 		try (Connection conn = cs.getConnection(); PreparedStatement pstm = conn.prepareStatement(query)){
 			pstm.setInt(1, Integer.parseInt(input.getText()));
 			System.out.println(pstm);
