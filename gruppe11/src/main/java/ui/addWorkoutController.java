@@ -308,7 +308,7 @@ public class addWorkoutController {
 		}
 	}
 	/**
-	 * Enters value into some fields automatically, saving time.
+	 * Enters value into some fields automatically, saving magnificent time.
 	 * 
 	 */
 	public void fillIn() {
