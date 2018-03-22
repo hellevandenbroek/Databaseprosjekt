@@ -2,7 +2,6 @@ package ui;
 
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
-
-
 import db_connection.Apparat;
 import db_connection.ConnectService;
 import db_connection.Exercise;
@@ -163,8 +160,6 @@ public class addWorkoutController {
 	public void addSelected() {
 		// TODO send to database
 		LocalDate dateV = date.getValue();
-
-		String notatV = notat.getText();
 		if (addedExercises.getItems().isEmpty()) {
 			throw new IllegalArgumentException("List is empty. Can not add.");
 		}
