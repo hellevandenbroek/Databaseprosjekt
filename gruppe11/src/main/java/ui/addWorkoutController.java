@@ -254,17 +254,27 @@ public class addWorkoutController {
 				
 			}
 		query2.append(";");
-		for (Exercise e : addedExercises.getItems()) {
-			if (e.hasApparat()) {
-				query2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ("
-							+ key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ");");
-			}
-		}
 		System.out.println(query2);
+		StringBuilder sb2 = new StringBuilder();
 		PreparedStatement ps = c.prepareStatement(query2.toString());
 		ps.executeUpdate();
-		System.out.println("Updated a second time.");
-
+		first = true;
+		sb2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ");
+		for (Exercise e : addedExercises.getItems()) {
+			if (e.hasApparat()) {
+				if (first) {
+					sb2.append("(");
+					first = false;
+				} else {
+					sb2.append(" ,(");
+				}
+				sb2.append(key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ")");
+			}
+		}
+		sb2.append(";");
+		PreparedStatement ps2 = c.prepareStatement(sb2.toString());
+		System.out.println("Updating last time, with apparats");
+		ps2.executeUpdate();
 		clearFields();
 		} catch (SQLException e) {
 			e.printStackTrace();
