@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
+import javax.management.Query;
+
 import db_connection.Apparat;
 import db_connection.ConnectService;
 import db_connection.Exercise;
@@ -63,45 +65,39 @@ public class addWorkoutController {
 
 	private ConnectService cs = new ConnectService();
 	private Statement stmt = null;
-
 	private Collection<Exercise> addedList = new ArrayList<>();
 
-	public void initialize() throws SQLException {
-
-		Connection c = cs.getConnection();
-
-		stmt = c.createStatement();
-
-		ResultSet rs = null;
-
-		// with apparater
-		List<Exercise> exercises = new ArrayList<>();
-
-		// without
-		String query = "SELECT øvelse_id, navn FROM øvelse WHERE øvelse_type = \"friøvelse\" ";
-		rs = stmt.executeQuery(query);
-
-
-		while (rs.next()) {
-			String name = rs.getString("navn");
-			int id = rs.getInt("øvelse_id");
-			Exercise e = new Exercise(name, id);
-			exercises.add(e);
+	public void initialize()  {
+		try (Connection c = cs.getConnection()) {
+			stmt = c.createStatement();
+			ResultSet rs = null;
+			List<Exercise> exercises = new ArrayList<>();
+			String query = "SELECT øvelse_id, navn FROM øvelse WHERE øvelse_type = \"friøvelse\" ";
+			rs = stmt.executeQuery(query);
+			
+			while (rs.next()) {
+				String name = rs.getString("navn");
+				int id = rs.getInt("øvelse_id");
+				Exercise e = new Exercise(name, id);
+				exercises.add(e);
+			}
+			
+			String queryApparat = "SELECT * FROM "
+					+ "øvelse NATURAL JOIN apparatøvelse JOIN apparat "
+					+ "WHERE apparat.apparat_id = apparatøvelse.apparat_id";
+			rs = stmt.executeQuery(queryApparat);
+			
+			while (rs.next()) {
+				String name = rs.getString("øvelse.navn");
+				int id = rs.getInt("øvelse_id");
+				Exercise ea = new Exercise(name, id, new Apparat(rs.getString("apparat.navn"), rs.getInt("apparat_id")));
+				exercises.add(ea);
+			}
+			listViewExercises.getItems().addAll(exercises);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
-		String queryApparat = "SELECT * FROM "
-				+ "øvelse NATURAL JOIN apparatøvelse JOIN apparat "
-				+ "WHERE apparat.apparat_id = apparatøvelse.apparat_id";
-		rs = stmt.executeQuery(queryApparat);
-
-		while (rs.next()) {
-			String name = rs.getString("øvelse.navn");
-			int id = rs.getInt("øvelse_id");
-			Exercise ea = new Exercise(name, id, new Apparat(rs.getString("apparat.navn"), rs.getInt("apparat_id")));
-			exercises.add(ea);
-		}
-
-		listViewExercises.getItems().addAll(exercises);
 		listViewExercises.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)-> {
 			if (newValue.getApparat() != null) {
 				showApparatView();
@@ -165,22 +161,23 @@ public class addWorkoutController {
 		}
 	}
 
-	public void addSelected() throws SQLException {
+	public void addSelected() {
 		// TODO send to database
 		LocalDate dateV = date.getValue();
 
 		String notatV = notat.getText();
 
-
-		Connection c = cs.getConnection();
-		String query =
+		
+		try (Connection c = cs.getConnection()) {;
+		StringBuilder query = new StringBuilder(
 				"INSERT INTO "
 						+ "treningsøkt(dato_tidspunkt, varighet, form, prestasjon, notat) "
 						+ "VALUES "
-						+ "(?, ?, ?, ?, ?);";
+						+ "(?, ?, ?, ?, ?);");
+		
 
-
-		PreparedStatement pstmt = c.prepareStatement(query);
+		PreparedStatement pstmt = c.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS);
+		
 		// Insert into tabellnavn(kilo, sett) values (?,?)
 
 		//1
@@ -194,9 +191,7 @@ public class addWorkoutController {
 			int year = dateV.getYear();
 			int month = dateV.getMonth().getValue();
 			int day = dateV.getDayOfMonth();
-
-
-
+			
 			Calendar cal = Calendar.getInstance();
 
 			cal.set(Calendar.YEAR, year);
@@ -235,16 +230,50 @@ public class addWorkoutController {
 		} else {
 			pstmt.setNull(5, Types.VARCHAR);
 		}
-
-		System.out.println(query);
-		pstmt.executeUpdate();
+		pstmt.executeUpdate();	
+		
+		int key = 10000;
+		try (ResultSet genKeys = pstmt.getGeneratedKeys()) {
+			if (genKeys.next()) {
+				key = genKeys.getInt(1);
+			} else {
+				throw new SQLException("Sorry, no treningsøkt_id found.");
+			}
+		}
+		System.out.println("preparing second insertion");
+		StringBuilder query2 = new StringBuilder();
+			boolean first = true;
+			query2.append("INSERT INTO utførte_øvelse VALUES ");
+			for (Exercise e : addedExercises.getItems()) {
+				if (first) {
+					first = false;
+					query2.append("(" + key + ", " + e.getId() + ")");
+					continue;
+				}
+				query2.append(", (" + key + ", " + e.getId() + ")");
+				
+			}
+		query2.append(";");
+		for (Exercise e : addedExercises.getItems()) {
+			if (e.hasApparat()) {
+				query2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ("
+							+ key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ");");
+			}
+		}
+		System.out.println(query2);
+		PreparedStatement ps = c.prepareStatement(query2.toString());
+		ps.executeUpdate();
+		System.out.println("Updated a second time.");
 
 		clearFields();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void clearFields() {
+	private void clearFields() {
 		notat.clear();
-		date.setValue(null);
+		date.setValue(null);	
 		addedExercises.getItems().clear();
 		kilo.setValue(null);
 		sett.setValue(null);

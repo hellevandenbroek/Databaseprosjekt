@@ -15,13 +15,25 @@
       <file leaf-file-name="addWorkoutController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gruppe11/src/main/java/ui/addWorkoutController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="253" column="23" lean-forward="true" selection-start-line="253" selection-start-column="23" selection-end-line="253" selection-end-column="23" />
+            <state relative-caret-position="245">
+              <caret line="237" column="0" lean-forward="true" selection-start-line="237" selection-start-column="0" selection-end-line="237" selection-end-column="0" />
               <folding>
-                <marker date="1521639950732" expanded="true" signature="2005:2073" ph="SELECT øvels... øvelse" />
-                <marker date="1521639950732" expanded="true" signature="2300:2430" ph="SELECT * FRO... øvelse" />
-                <marker date="1521639950732" expanded="true" signature="4624:4754" ph="INSERT INTO treningsøkt... " />
+                <marker date="1521657091073" expanded="true" signature="2005:2073" ph="SELECT øvels... øvelse" />
+                <marker date="1521657091073" expanded="true" signature="2300:2430" ph="SELECT * FRO... øvelse" />
+                <marker date="1521657091073" expanded="true" signature="4624:4754" ph="INSERT INTO treningsøkt... " />
+                <marker date="1521657091073" expanded="true" signature="6301:6351" ph="INSERT INTO utførte_øvelse... " />
+                <marker date="1521657091073" expanded="true" signature="6301:6352" ph="INSERT INTO utførte_øvelse... " />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Exercise.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gruppe11/src/main/java/db_connection/Exercise.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-137">
+              <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -151,7 +163,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="ui" type="462c0819:PsiDirectoryNode" />
+              <item name="db_connection" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -306,16 +318,15 @@
       <updated>1521619078640</updated>
       <workItem from="1521619084575" duration="3540000" />
       <workItem from="1521636094400" duration="568000" />
-      <workItem from="1521636690498" duration="4192000" />
+      <workItem from="1521636690498" duration="8455000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8300000" />
+    <option name="totallyTimeSpent" value="12563000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="260" y="53" width="1400" height="1000" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -327,7 +338,7 @@
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" x="360" y="153" width="1200" height="800" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32997763" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32997763" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -363,9 +374,11 @@
         <state relative-caret-position="666">
           <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
           <folding>
-            <marker date="1521639950732" expanded="true" signature="2005:2073" ph="SELECT øvels... øvelse" />
-            <marker date="1521639950732" expanded="true" signature="2300:2430" ph="SELECT * FRO... øvelse" />
-            <marker date="1521639950732" expanded="true" signature="4624:4754" ph="INSERT INTO treningsøkt... " />
+            <marker date="1521657091073" expanded="true" signature="2005:2073" ph="SELECT øvels... øvelse" />
+            <marker date="1521657091073" expanded="true" signature="2300:2430" ph="SELECT * FRO... øvelse" />
+            <marker date="1521657091073" expanded="true" signature="4624:4754" ph="INSERT INTO treningsøkt... " />
+            <marker date="1521657091073" expanded="true" signature="6301:6351" ph="INSERT INTO utførte_øvelse... " />
+            <marker date="1521657091073" expanded="true" signature="6301:6352" ph="INSERT INTO utførte_øvelse... " />
           </folding>
         </state>
       </provider>
@@ -399,9 +412,11 @@
         <state relative-caret-position="666">
           <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
           <folding>
-            <marker date="1521639950732" expanded="true" signature="2005:2073" ph="SELECT øvels... øvelse" />
-            <marker date="1521639950732" expanded="true" signature="2300:2430" ph="SELECT * FRO... øvelse" />
-            <marker date="1521639950732" expanded="true" signature="4624:4754" ph="INSERT INTO treningsøkt... " />
+            <marker date="1521657091073" expanded="true" signature="2005:2073" ph="SELECT øvels... øvelse" />
+            <marker date="1521657091073" expanded="true" signature="2300:2430" ph="SELECT * FRO... øvelse" />
+            <marker date="1521657091073" expanded="true" signature="4624:4754" ph="INSERT INTO treningsøkt... " />
+            <marker date="1521657091073" expanded="true" signature="6301:6351" ph="INSERT INTO utførte_øvelse... " />
+            <marker date="1521657091073" expanded="true" signature="6301:6352" ph="INSERT INTO utførte_øvelse... " />
           </folding>
         </state>
       </provider>
@@ -481,14 +496,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/gruppe11/src/main/java/db_connection/Exercise.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-137">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gruppe11/src/main/java/ui/addWorkoutController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="253" column="23" lean-forward="true" selection-start-line="253" selection-start-column="23" selection-end-line="253" selection-end-column="23" />
+        <state relative-caret-position="245">
+          <caret line="237" column="0" lean-forward="true" selection-start-line="237" selection-start-column="0" selection-end-line="237" selection-end-column="0" />
           <folding>
-            <marker date="1521639950732" expanded="true" signature="2005:2073" ph="SELECT øvels... øvelse" />
-            <marker date="1521639950732" expanded="true" signature="2300:2430" ph="SELECT * FRO... øvelse" />
-            <marker date="1521639950732" expanded="true" signature="4624:4754" ph="INSERT INTO treningsøkt... " />
+            <marker date="1521657091073" expanded="true" signature="2005:2073" ph="SELECT øvels... øvelse" />
+            <marker date="1521657091073" expanded="true" signature="2300:2430" ph="SELECT * FRO... øvelse" />
+            <marker date="1521657091073" expanded="true" signature="4624:4754" ph="INSERT INTO treningsøkt... " />
+            <marker date="1521657091073" expanded="true" signature="6301:6351" ph="INSERT INTO utførte_øvelse... " />
+            <marker date="1521657091073" expanded="true" signature="6301:6352" ph="INSERT INTO utførte_øvelse... " />
           </folding>
         </state>
       </provider>
