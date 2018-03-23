@@ -62,8 +62,8 @@ public class addWorkoutController {
 	private ConnectService cs = new ConnectService();
 	private Statement stmt = null;
 	private Collection<Exercise> addedList = new ArrayList<>();
-	private Boolean addedExercisesHasApparat;
 
+	private Boolean addedExercisesHasApparat;
 	public void initialize()  {
 		addedExercisesHasApparat = false;
 		try (Connection c = cs.getConnection()) {
@@ -104,7 +104,7 @@ public class addWorkoutController {
 				kilo.setValue(null);
 				sett.setValue(null);
 			}
-			
+
 		});
 
 		kilo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -189,7 +189,7 @@ public class addWorkoutController {
 				minuteV = Integer.parseInt(minute.getText());
 			}
 			int year = dateV.getYear();
-			int month = dateV.getMonth().getValue();
+			int month = dateV.getMonth().getValue()-1;
 			int day = dateV.getDayOfMonth();
 			
 			Calendar cal = Calendar.getInstance();
@@ -202,8 +202,9 @@ public class addWorkoutController {
 			cal.set(Calendar.HOUR, hourV);
 
 			pstmt.setTimestamp(1, new Timestamp(cal.getTimeInMillis()));
+			System.out.println(pstmt);
 		} else {
-			
+			pstmt.setNull(1, Types.TIMESTAMP);
 			Alerter.error("Vennligst velg dato", "Du må velge dato og tidspunkt for treningsøkten");
 			throw new IllegalStateException();
 		}
@@ -261,24 +262,22 @@ public class addWorkoutController {
 		PreparedStatement ps = c.prepareStatement(query2.toString());
 		ps.executeUpdate();
 		first = true;
-		if (addedExercisesHasApparat) {
-			sb2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ");
-			for (Exercise e : addedExercises.getItems()) {
-				if (e.hasApparat()) {
-					if (first) {
-						sb2.append("(");
-						first = false;
-					} else {
-						sb2.append(" ,(");
-					}
-					sb2.append(key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ")");
+		sb2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ");
+		for (Exercise e : addedExercises.getItems()) {
+			if (e.hasApparat()) {
+				if (first) {
+					sb2.append("(");
+					first = false;
+				} else {
+					sb2.append(" ,(");
 				}
+				sb2.append(key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ")");
 			}
-			sb2.append(";");
-			PreparedStatement ps2 = c.prepareStatement(sb2.toString());
-			System.out.println("Updating last time, with apparats");
-			ps2.executeUpdate();
 		}
+		sb2.append(";");
+		PreparedStatement ps2 = c.prepareStatement(sb2.toString());
+		System.out.println("Updating last time, with apparats");
+		ps2.executeUpdate();
 		Alerter.info("Vellykket!", "Treningsøkten er nå lagt til i din dagbok!");
 		clearFields();
 		} catch (SQLException e) {
@@ -315,12 +314,12 @@ public class addWorkoutController {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * Enters value into some fields automatically, saving magnificent time.
 	 * 
 	 */
 	public void fillIn() {
-//		date.setValue(new LocalDateStringConverter().fromString("3/5/2018"));
 		kilo.setValue(55); sett.setValue(3);
 		durationMinutes.setText("45"); durationTimer.setText("1");
 		hour.setText("12"); minute.setText("35");	
