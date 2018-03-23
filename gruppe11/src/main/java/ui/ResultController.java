@@ -1,9 +1,12 @@
 package ui;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.sql.PreparedStatement;
 import db_connection.ConnectService;
 import javafx.collections.FXCollections;
@@ -54,54 +57,52 @@ public class ResultController {
 		ex.setValue(ex.getItems().get(0));
 	}
 
-	public String getDate(DatePicker date) {
-		return date.getValue().toString();
+	public Date getDate(DatePicker date) {
+		return Date.valueOf(date.getValue());
 	}
 
-	public void getData() {
-		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
-		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt > (?) < (?);";
-		Connection c;
-		try {
-			c = cs.getConnection();
-			PreparedStatement pstm = c.prepareStatement(query);
-			PreparedStatement pstm2 = c.prepareStatement(query2);
-			String fDate = getDate(fromDate);
-			String tDate = getDate(toDate);
+	public void getData() throws SQLException {
+		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt BETWEEN ? AND ? AND navn = ?";
+		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt BETWEEN ? AND ?;";
+		try (Connection conn = cs.getConnection();
+				PreparedStatement pstm = conn.prepareStatement(query);
+				PreparedStatement pstm2 = conn.prepareStatement(query2);) {
+			Date fDate = getDate(fromDate);
+			Date tDate = getDate(toDate);
+			System.out.println(fDate + " " + tDate);
 			String exercise = ex.getSelectionModel().getSelectedItem();
-			pstm.setString(1, fDate);
-			pstm.setString(2, tDate);
+			pstm.setDate(1, fDate);
+			pstm.setDate(2, tDate);
 			pstm.setString(3, exercise);
-			pstm2.setString(1, fDate);
-			pstm2.setString(2, tDate);
-			ResultSet rs = pstm.executeQuery();
-			ResultSet rs2 = pstm2.executeQuery();
-			String str = "";
-			while (rs2.next()) {
-				str += "Antall økter i perioden: " + rs2.getInt("Antall") + "\n";
-				str += "===================================\n";
-			}
-			while (rs.next()) {
-				String notat = rs.getString("notat");
-				if (notat == null) {
-					notat = "Ingen notat";
+			pstm2.setDate(1, fDate);
+			pstm2.setDate(2, tDate);
+			System.out.println(pstm);
+			System.out.println(pstm2);
+			try (ResultSet rs = pstm.executeQuery(); ResultSet rs2 = pstm2.executeQuery()) {
+				String str = "";
+				while (rs2.next()) {
+					str += "Antall økter i perioden: " + rs2.getInt("Antall") + "\n";
+					str += "===================================\n";
 				}
-				str += "Navn: " + rs.getString("navn") + "\n";
-				str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
-				str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
-				str += "Varighet: " + rs.getTime("varighet") + "\n";
-				str += "Form: " + rs.getInt("form") + "\n";
-				str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
-				str += "Notat: " + notat + "\n";
-				str += "-----------------------------------\n";	
+				while (rs.next()) {
+					String notat = rs.getString("notat");
+					if (notat == null) {
+						notat = "Ingen notat";
+					}
+					str += "Navn: " + rs.getString("navn") + "\n";
+					str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
+					str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
+					str += "Varighet: " + rs.getTime("varighet") + "\n";
+					str += "Form: " + rs.getInt("form") + "\n";
+					str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
+					str += "Notat: " + notat + "\n";
+					str += "-----------------------------------\n";
+					data.setText(str);
+				}
+			} catch (Exception e) {
+				Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
+				e.printStackTrace();
 			}
-			
-			
-			data.setText(str);
-
-		} catch (Exception e) {
-			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
-			e.printStackTrace();
 		}
 
 	}
