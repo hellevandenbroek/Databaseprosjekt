@@ -190,7 +190,7 @@ public class addWorkoutController {
 				minuteV = Integer.parseInt(minute.getText());
 			}
 			int year = dateV.getYear();
-			int month = dateV.getMonth().getValue();
+			int month = dateV.getMonth().getValue()-1;
 			int day = dateV.getDayOfMonth();
 			
 			Calendar cal = Calendar.getInstance();
@@ -203,6 +203,7 @@ public class addWorkoutController {
 			cal.set(Calendar.HOUR, hourV);
 
 			pstmt.setTimestamp(1, new Timestamp(cal.getTimeInMillis()));
+			System.out.println(pstmt);
 		} else {
 			pstmt.setNull(1, Types.TIMESTAMP);
 			Alerter.error("Vennligst velg dato", "Du må velge dato og tidspunkt for treningsøkten");
