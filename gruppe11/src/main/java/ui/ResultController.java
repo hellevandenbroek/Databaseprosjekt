@@ -43,9 +43,9 @@ public class ResultController {
 	public void initialize() throws SQLException {
 		ObservableList<String> exercises = FXCollections.observableArrayList();
 		String query = "SELECT navn FROM `øvelse`";
-		try(Connection conn = cs.getConnection(); 
-				Statement stm = conn.createStatement(); 
-				ResultSet rs = stm.executeQuery(query)){
+		try (Connection conn = cs.getConnection();
+				Statement stm = conn.createStatement();
+				ResultSet rs = stm.executeQuery(query)) {
 			while (rs.next()) {
 				exercises.add(rs.getString("navn"));
 			}
@@ -59,7 +59,7 @@ public class ResultController {
 	}
 
 	public void getData() {
-		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
+		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` NATURAL JOIN utførte_øvelse WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
 		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt > (?) < (?);";
 		try (Connection conn = cs.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(query);
@@ -72,6 +72,8 @@ public class ResultController {
 			pstm.setString(3, exercise);
 			pstm2.setString(1, fDate);
 			pstm2.setString(2, tDate);
+			System.out.println(pstm);
+			System.out.println(pstm2);
 			try (ResultSet rs = pstm.executeQuery(); ResultSet rs2 = pstm2.executeQuery()) {
 				String str = "";
 				while (rs2.next()) {
