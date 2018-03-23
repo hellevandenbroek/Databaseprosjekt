@@ -31,7 +31,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.converter.LocalDateStringConverter;
 
 public class addWorkoutController {
 
@@ -254,36 +253,37 @@ public class addWorkoutController {
 					continue;
 				}
 				query2.append(", (" + key + ", " + e.getId() + ")");
-				
 			}
 		query2.append(";");
-		System.out.println(query2);
+		System.out.println(query2); 
 		StringBuilder sb2 = new StringBuilder();
 		PreparedStatement ps = c.prepareStatement(query2.toString());
 		ps.executeUpdate();
-		first = true;
-		sb2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ");
-		for (Exercise e : addedExercises.getItems()) {
-			if (e.hasApparat()) {
-				if (first) {
-					sb2.append("(");
-					first = false;
-				} else {
-					sb2.append(" ,(");
+		if (addedExercisesHasApparat) {
+			first = true;
+			sb2.append("INSERT INTO apparatøvelse_i_treningsøkt(treningsøkt_id, øvelse_id, antall_kilo, antall_sett) VALUES ");
+			for (Exercise e : addedExercises.getItems()) {
+				if (e.hasApparat()) {
+					if (first) {
+						sb2.append("(");
+						first = false;
+					} else {
+						sb2.append(" ,(");
+					}
+					sb2.append(key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ")");
 				}
-				sb2.append(key +", "+  e.getId() + ", " + e.getApparat().getKilo() + ", " + e.getApparat().getSett() + ")");
 			}
+			sb2.append(";");
+			PreparedStatement ps2 = c.prepareStatement(sb2.toString());
+			System.out.println("Updating last time, with apparats");
+			ps2.executeUpdate();
 		}
-		sb2.append(";");
-		PreparedStatement ps2 = c.prepareStatement(sb2.toString());
-		System.out.println("Updating last time, with apparats");
-		ps2.executeUpdate();
-		Alerter.info("Vellykket!", "Treningsøkten er nå lagt til i din dagbok!");
-		clearFields();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Alerter.error("Feil ved innsetting", "Kunne ikke legge til treningsøkt. Vennligst sjekk at alt ser riktig ut.");
 		}
+		Alerter.info("Vellykket!", "Treningsøkten er nå lagt til i din dagbok!");
+		clearFields();
 	}
 
 	private void clearFields() {
