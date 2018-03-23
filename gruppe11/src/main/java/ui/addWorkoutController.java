@@ -131,7 +131,6 @@ public class addWorkoutController {
 
 		}
 
-		date.setValue(new LocalDateStringConverter().fromString("3/5/2018"));
 		kilo.setItems(five150);
 		form.setItems(oneTen);
 		prestasjon.setItems(oneTen);
@@ -321,7 +320,6 @@ public class addWorkoutController {
 	 * 
 	 */
 	public void fillIn() {
-//		date.setValue(new LocalDateStringConverter().fromString("3/5/2018"));
 		kilo.setValue(55); sett.setValue(3);
 		durationMinutes.setText("45"); durationTimer.setText("1");
 		hour.setText("12"); minute.setText("35");	
