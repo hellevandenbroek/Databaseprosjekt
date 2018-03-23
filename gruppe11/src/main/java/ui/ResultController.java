@@ -61,12 +61,14 @@ public class ResultController {
 		return Date.valueOf(date.getValue());
 	}
 
-	public void getData() throws SQLException {
-		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt BETWEEN ? AND ? AND navn = ?";
-		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt BETWEEN ? AND ?;";
+	public void getData() throws Exception {
+		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` NATURAL JOIN utførte_øvelse WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
+		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt > (?) < (?);";
+		String query3 = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` NATURAL JOIN apparatøvelse_i_treningsøkt WHERE øvelse.navn = (?) AND treningsøkt_id = (?) and dato_tidspunkt >= (?) <= (?);";
 		try (Connection conn = cs.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(query);
-				PreparedStatement pstm2 = conn.prepareStatement(query2);) {
+				PreparedStatement pstm2 = conn.prepareStatement(query2);
+				PreparedStatement pstm3 = conn.prepareStatement(query3)) {
 			Date fDate = getDate(fromDate);
 			Date tDate = getDate(toDate);
 			String exercise = ex.getSelectionModel().getSelectedItem();
@@ -85,16 +87,33 @@ public class ResultController {
 				}
 				while (rs.next()) {
 					String notat = rs.getString("notat");
+					String type = rs.getString("øvelse_type");
+					String navn = rs.getString("navn");
 					if (notat == null) {
 						notat = "Ingen notat";
 					}
 					str += "Navn: " + rs.getString("navn") + "\n";
-					str += "Øvelse type: " + rs.getString("øvelse_type") + "\n";
+					str += "Øvelse type: " + type + "\n";
 					str += "Dato: " + rs.getDate("dato_tidspunkt") + "\n";
 					str += "Varighet: " + rs.getTime("varighet") + "\n";
 					str += "Form: " + rs.getInt("form") + "\n";
 					str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
 					str += "Notat: " + notat + "\n";
+					if (type.equalsIgnoreCase("apparatøvelse")) {
+						pstm3.setString(1, navn);
+						pstm3.setInt(2, rs.getInt("treningsøkt_id"));
+						pstm3.setDate(3, fDate);
+						pstm3.setDate(4, tDate);
+						System.out.println(pstm3);
+						try (ResultSet rs3 = pstm3.executeQuery()) {
+							while (rs3.next()) {
+								str += "Antall sett: " + rs3.getString("antall_sett") + "\n";
+								str += "Antall kilo: " + rs3.getString("antall_kilo") + "\n";
+							}
+						}
+					}
+					;
+
 					str += "-----------------------------------\n";
 					data.setText(str);
 				}
