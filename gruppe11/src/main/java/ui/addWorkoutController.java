@@ -37,6 +37,7 @@ public class addWorkoutController {
 
 	@FXML Button back;
 
+	@FXML Button fillValues;
 
 	//dato, tid, duration
 	@FXML DatePicker date;
@@ -62,7 +63,9 @@ public class addWorkoutController {
 	private Statement stmt = null;
 	private Collection<Exercise> addedList = new ArrayList<>();
 
+	private Boolean addedExercisesHasApparat;
 	public void initialize()  {
+		addedExercisesHasApparat = false;
 		try (Connection c = cs.getConnection()) {
 			stmt = c.createStatement();
 			ResultSet rs = null;
@@ -151,6 +154,7 @@ public class addWorkoutController {
 			if (e.hasApparat() && kilo.getValue() != null && sett.getValue() != null) {
 				e.getApparat().setKilo(kilo.getValue());
 				e.getApparat().setSett(sett.getValue());
+				addedExercisesHasApparat = true;
 			}
 			addedExercises.getItems().add(e);
 			addedList.add(e);
@@ -161,6 +165,7 @@ public class addWorkoutController {
 		// TODO send to database
 		LocalDate dateV = date.getValue();
 		if (addedExercises.getItems().isEmpty()) {
+			Alerter.error("Lista er tom", "Du må legge til øvelser. Treningsøkten kan ikke være tom.");
 			throw new IllegalArgumentException("List is empty. Can not add.");
 		}
 		
@@ -200,6 +205,8 @@ public class addWorkoutController {
 			pstmt.setTimestamp(1, new Timestamp(cal.getTimeInMillis()));
 		} else {
 			pstmt.setNull(1, Types.TIMESTAMP);
+			Alerter.error("Vennligst velg dato", "Du må velge dato og tidspunkt for treningsøkten");
+			throw new IllegalStateException();
 		}
 		// 2
 		if (!durationTimer.getText().equals("") || !durationMinutes.getText().equals("")) {
@@ -306,5 +313,20 @@ public class addWorkoutController {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Enters value into some fields automatically, saving magnificent time.
+	 * 
+	 */
+	public void fillIn() {
+//		date.setValue(new LocalDateStringConverter().fromString("3/5/2018"));
+		kilo.setValue(55); sett.setValue(3);
+		durationMinutes.setText("45"); durationTimer.setText("1");
+		hour.setText("12"); minute.setText("35");	
+		form.setValue(9);
+		System.out.println();
+		prestasjon.setValue(3);
+		notat.setText("This was added automatically...");
 	}
 }

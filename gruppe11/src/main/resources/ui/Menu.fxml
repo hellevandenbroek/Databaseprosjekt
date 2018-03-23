@@ -30,7 +30,12 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="add" minWidth="185.0" mnemonicParsing="false" onAction="#toAdd" text="Legg til treningsøkt">
+                  <Button fx:id="addExApp" minWidth="185.0" mnemonicParsing="false" onAction="#toAddExApp" text="Legg til øvelse/apparat">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="addGroup" minWidth="185.0" mnemonicParsing="false" onAction="#toAddGroup" text="Legg til treningsøkt">
                      <VBox.margin>
                         <Insets bottom="5.0" />
                      </VBox.margin>

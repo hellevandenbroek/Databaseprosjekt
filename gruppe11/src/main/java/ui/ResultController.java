@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 
 public class ResultController {
 
-	private Statement stm;
 	private ConnectService cs = new ConnectService();
 
 	@FXML
@@ -47,20 +46,22 @@ public class ResultController {
 	public void initialize() throws SQLException {
 		ObservableList<String> exercises = FXCollections.observableArrayList();
 		String query = "SELECT navn FROM `øvelse`";
-		Connection c = cs.getConnection();
-		stm = c.createStatement();
-		ResultSet rs = stm.executeQuery(query);
-		while (rs.next()) {
-			exercises.add(rs.getString("navn"));
+		try(Connection conn = cs.getConnection(); 
+				Statement stm = conn.createStatement(); 
+				ResultSet rs = stm.executeQuery(query)){
+			while (rs.next()) {
+				exercises.add(rs.getString("navn"));
+			}
+			ex.setItems(exercises);
+			ex.setValue(ex.getItems().get(0));
 		}
-		ex.setItems(exercises);
-		ex.setValue(ex.getItems().get(0));
 	}
 
 	public Date getDate(DatePicker date) {
 		return Date.valueOf(date.getValue());
 	}
 
+<<<<<<< HEAD
 	public void getData() throws SQLException {
 		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt BETWEEN ? AND ? AND navn = ?";
 		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt BETWEEN ? AND ?;";
@@ -70,14 +71,29 @@ public class ResultController {
 			Date fDate = getDate(fromDate);
 			Date tDate = getDate(toDate);
 			System.out.println(fDate + " " + tDate);
+=======
+	public void getData() {
+		String query = "SELECT * FROM `øvelse` NATURAL JOIN `treningsøkt` WHERE dato_tidspunkt > (?) < (?) and navn = (?)";
+		String query2 = "SELECT COUNT(*) AS `Antall` from treningsøkt WHERE dato_tidspunkt > (?) < (?);";
+		try (Connection conn = cs.getConnection();
+				PreparedStatement pstm = conn.prepareStatement(query);
+				PreparedStatement pstm2 = conn.prepareStatement(query2);) {
+			String fDate = getDate(fromDate);
+			String tDate = getDate(toDate);
+>>>>>>> 79770a0b11d2e689486a8fb4473c1bb78de337ed
 			String exercise = ex.getSelectionModel().getSelectedItem();
 			pstm.setDate(1, fDate);
 			pstm.setDate(2, tDate);
 			pstm.setString(3, exercise);
+<<<<<<< HEAD
 			pstm2.setDate(1, fDate);
 			pstm2.setDate(2, tDate);
 			System.out.println(pstm);
 			System.out.println(pstm2);
+=======
+			pstm2.setString(1, fDate);
+			pstm2.setString(2, tDate);
+>>>>>>> 79770a0b11d2e689486a8fb4473c1bb78de337ed
 			try (ResultSet rs = pstm.executeQuery(); ResultSet rs2 = pstm2.executeQuery()) {
 				String str = "";
 				while (rs2.next()) {
@@ -97,25 +113,32 @@ public class ResultController {
 					str += "Prestasjon: " + rs.getInt("prestasjon") + "\n";
 					str += "Notat: " + notat + "\n";
 					str += "-----------------------------------\n";
+<<<<<<< HEAD
 					data.setText(str);
 				}
 			} catch (Exception e) {
 				Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
 				e.printStackTrace();
 			}
+=======
+				}
+				data.setText(str);
+			}
+
+		} catch (Exception e) {
+			Alerter.error("Ugyldig valg", "Vennligst sjekk dato og valg av øvelse");
+			e.printStackTrace();
+>>>>>>> 79770a0b11d2e689486a8fb4473c1bb78de337ed
 		}
 
 	}
 
 	public void toBack() {
 		try {
-			Stage stag = (Stage) back.getScene().getWindow();
+			Stage stage = (Stage) back.getScene().getWindow();
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Menu.fxml"));
 			Parent root1 = (Parent) fxmlLoader.load();
-			Stage stage = new Stage();
 			stage.setScene(new Scene(root1));
-			stage.show();
-			stag.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
